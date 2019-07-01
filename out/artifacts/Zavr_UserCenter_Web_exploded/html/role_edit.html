@@ -1,0 +1,419 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8"><style type="text/css">[v-cloak] {
+            display: none;
+        }</style>
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5shiv.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.8/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="lib/layer/2.4/skin/layer.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
+<!--[if IE 6]>
+<script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<title>角色设置</title>
+	<style>
+		td div{
+			float: left;
+		}
+		td p{
+			float: left;
+			width: 150px;
+		}
+	</style>
+</head>
+<body>
+<div id="app" v-cloak>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 角色管理 <span class="c-gray en">&gt;</span> {{title}} <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container" >
+
+    <div class="cl pd-5 bg-1 bk-gray mt-20">
+		<span class="l">
+			<!--<a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>-->
+			<b>角色名称</b>
+		</span>
+	</div>
+	<div class="text-c" style="    padding-top:  20px;    float: inherit;    padding-right: 92%;">
+		<input type="text" placeholder="角色名称" id="rolename" class="input-text" style="width: 150px;"  maxlength="10">
+	</div>
+	<div class="mt-20">
+		<!--white-space: nowrap; 文本强制不换行； text-overflow:ellipsis;<!-- 文本溢出显示省略号；overflow:hidden; <!--溢出的部分隐藏；-->
+	<div class="cl pd-5 bg-1 bk-gray mt-20">
+		<span class="l">
+			<!--<a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>-->
+			<b>配置权限</b>
+		</span>
+	</div>
+	<table class="table table-border table-bordered table-hover table-bg table-sort" style="width:100%;white-space: nowrap;text-overflow: ellipsis;overflow: hidden">
+		<tr>
+			<td style="text-align: center">
+				<label for="allBase">托管空间</label>
+			</td>
+			<td>
+				<input type="text" placeholder="托管空间" id="tgspace" class="input-text" style="width: 150px;" onchange="valiDouble(this)" maxlength="10">G
+			
+			</td>
+		</tr>
+		<tr>
+			<td style="text-align: center">
+				<input type="checkbox" id="jcb">
+				<label for="jcb">基础版</label>
+			</td>
+			<td>
+				<p v-for="i in listInfo.List" v-if="i.function_type=='jcb'"  :id="i.function_type">
+					<input type="checkbox" :id="i.function_code" class="check-box checkbox" :value="i.function_code" :data-id="i.id"  :name="i.function_type" onchange="checkJCB()">
+					<label :for="i.function_code">{{i.function_name}}</label>
+				</p>
+			</td>
+		</tr>
+		<tr>
+			<td style="text-align: center">
+				<input type="checkbox" id="zyb">
+				<label for="zyb">专业版</label>
+			</td>
+			<td>
+				<p v-for="i in listInfo.List" v-if="i.function_type=='zyb'">
+					<input type="checkbox" :id="i.function_code" class="check-box checkbox" :value="i.function_code" :data-id="i.id" :name="i.function_type" onchange="checkZYB()">
+					<label :for="i.function_code">{{i.function_name}}</label>
+				</p>
+			</td>
+		</tr>
+	</table>
+		<div style="text-align: center;padding-top: 5%;">
+			<input type="button" placeholder="保存" value="保存" onclick="save()" class="btn btn-success radius" id="buttonshow" style="margin-right:10%">
+			<input type="reset" placeholder="返回" value="返回" onclick="javascript:history.back(-1);" class="btn btn-primary radius">
+		</div>
+	</div>
+</div>
+</div>
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script> 
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="lib/My97DatePicker/4.8/WdatePicker.js"></script> 
+<script type="text/javascript" src="lib/datatables/1.10.0/jquery.dataTables.min.js"></script> 
+<script type="text/javascript" src="lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="lib/layui/layui.all.js"></script>
+<script type="text/javascript" src="lib/vue.min.js"></script>
+<script type="text/javascript" src="lib/request.js"></script>
+<script type="text/javascript">
+    // 创建一个 Vue 实例或 "ViewModel"
+    // 它连接 View 与 Model
+    var vue = new Vue({
+        el: '#app',
+        data: {
+			listInfo:[],
+			type:UrlParam.paramValues("type"),
+			id:UrlParam.paramValues("id"),
+            name:UrlParam.paramValues("name"),
+			space:UrlParam.paramValues("space"),
+            jcb:[],
+			zyb:[],
+            RolePermit:"",
+			title:"添加角色",
+		}
+    });
+/*	1. 托管空间只能输入正整数，最大不超过1000000，填入负整数和0时，自动恢复至1，超过100万时，自动恢复至1000000；
+
+注：功能类别勾选框、托管空间输入框和角色名称输入框（1-10个字）不能为空。任一模块为空时，点击“确定”按钮，弹框提示“角色名称/托管空间/功能类别不能为空”*/
+	function valiDouble(obj){
+		var reg = /^[0-9]{1,10}?$/;
+		if($(obj).val()>1000000){
+			$(obj).val("1000000");
+			layer.msg("最大不超过1000000",{icon:2,time:1000});
+			return;
+		}
+		if($(obj).val()==0){
+			$(obj).val("1");
+			return;
+		}
+		if(!reg.test($(obj).val())){
+			$(obj).val("1");
+			layer.msg("请输入正确的内容",{icon:2,time:1000});
+			return ;
+		}
+	}
+	
+	function checkZYB(){
+		var len = $("input[name=zyb]").length;
+		var i = 0;
+		$("input[name=zyb]").each(function(){
+			if(this.checked==true){
+				i++;
+			}
+		})
+		
+		if(i!=len){
+			$("#zyb").attr("checked",false);
+		}else{
+			$("#zyb").prop("checked",true);
+		}
+	}
+	function checkJCB(){
+		var len = $("input[name=jcb]").length;
+		var i = 0;
+		$("input[name=jcb]").each(function(){
+			if(this.checked==true){
+				i++;
+			}
+		})
+		if(i!=len){
+			$("#jcb").attr("checked",false);
+		}else{
+			$("#jcb").prop("checked",true);
+		}
+	}
+	
+	
+    var json = [];
+    json.push(JSON.parse(getCookie("islogin")));
+    // json[0].Data.id
+
+    $(function () {
+        $.ajax({
+            type: "post",
+            url: fucntionlist,
+            data: {},
+            dataType: "json",
+            success: function(data){
+                //console.log(JSON.stringify(data));
+                vue.listInfo = data;
+            },error:function(err){
+            }
+        });
+		$("#rolename").val(vue.name);
+        
+
+		if(UrlParam.paramValues("id")!=undefined){
+			$("#tgspace").val(vue.space);
+			vue.title = "角色编辑";
+            var param = "{\"PageIndex\":1,\"PageSize\":10,\"Query\":{\"ID\":"+vue.id+"}}";
+            $.ajax({
+                type: "post",
+                url: memberroleslist,
+                data: {param:param},
+                dataType: "json",
+                success: function(data){
+                    //console.log(JSON.stringify(data.List));
+					if(data.PageCount==1){
+						for (var i = 0; i < data.List[0].role_permit.jcb.length; i++) {
+					        var j = data.List[0].role_permit.jcb[i];
+					        $("input[id="+j.name+"]:checkbox").attr('checked',j.value)
+						}
+						for (var i = 0; i < data.List[0].role_permit.zyb.length; i++) {
+							var j = data.List[0].role_permit.zyb[i];
+							$("input[id='"+j.name+"']:checkbox").each(function(){
+							$(this).attr("checked",j.value);
+							});
+						}
+
+					}
+                }
+            });
+		}
+		if(vue.type==1){
+			
+            $("#rolename").attr("disabled","disabled");
+            $("#buttonshow").css("display","none");
+			$("#tgspace").attr("disabled","disabled");
+			
+			vue.title = "查看详情";
+		}
+    })
+
+	
+	function save(){
+		
+        var name = $("#rolename").val();
+        if(name==''){
+            layer.msg("角色名称不能为空",{icon:2,time:1000})
+            return;
+        }
+		if($("#tgspace").val()==""){
+			layer.msg("仅支持1-1000000以内的正整数",{icon:2,time:1000})
+			return;
+		}
+		
+		if(UrlParam.paramValues("type")==2 && $("#rolename").val()==UrlParam.paramValues("name")){
+		
+		
+		}else if(UrlParam.paramValues("type")!=1){// && !valiCountNames()
+			var flag = 0;
+			$.ajax({
+				type: "post",
+				url:valiCountName,
+				data:{name:$("#rolename").val()},
+				dataType: "json",
+				async:false,
+				success: function(data){
+					if(!data.Success){
+						flag = 1;
+						
+						return;
+					}
+				},error:function(err){
+					flag = 1;
+					return;
+				}
+			});            
+			if(flag==1){
+				$("#rolename").val("");
+				layer.msg("角色已存在",{icon:2,time:1000});
+				return;
+			}
+        }
+
+        var checkVali = "";
+		vue.jcb = [];
+        $("input[name='jcb']:checkbox ").each(function(){
+            var j = {};
+            if(this.checked==true){
+				checkVali = "1";
+                // alert(this.id+"选中"+this.value)
+                j.name = this.id;
+                j.value = true;
+                vue.jcb.push(j);
+            }else{
+                j.name = this.id;
+                j.value = false;
+                vue.jcb.push(j);
+            }
+        });
+		vue.zyb = [];
+        $("input[name='zyb']:checkbox ").each(function(){
+            var j = {};
+            if(this.checked==true){
+				checkVali = "1";
+                // alert(this.id+"选中"+this.value)
+                j.name = this.id;
+                j.value = true;
+                vue.zyb.push(j);
+            }else{
+                j.name = this.id;
+                j.value = false;
+                vue.zyb.push(j);
+            }
+        });
+
+
+		if(checkVali == ""){
+			layer.msg("功能类别不能为空",{icon:2,time:1000})
+			return;
+		}
+		
+        //console.log(JSON.stringify(vue.jcb))
+        //console.log(JSON.stringify(vue.zyb))
+		vue.RolePermit = "{\"jcb\":"+JSON.stringify(vue.jcb)+",\"zyb\":"+JSON.stringify(vue.zyb)+"}"
+		//console.log(vue.RolePermit)
+		 
+        if(vue.id!=undefined){
+            update(name);
+		}else{
+			
+            insert(name);
+		}
+	}
+
+	function update(name){
+		var param = "{\"ID\":"+vue.id+",\"RolePermit\":"+vue.RolePermit+",\"Updater\":"+json[0].Data.id+",\"RoleName\":\""+name+"\",\"Status\":1,\"TgSpace\":"+$("#tgspace").val()+"}";
+		
+        $.ajax({
+            type: "post",
+            url: updateMenberRoles,
+            data: {param:param},
+            dataType: "json",
+            success: function(data){
+                // console.log(JSON.stringify(data));
+				layer.msg("修改成功",{icon:1,time:1000},function () {
+					window.history.back(-1)
+				});
+				
+            },error:function(err){
+            }
+        });
+	}
+
+	function insert(name){
+        var param = "{\"RolePermit\":"+vue.RolePermit+",\"Adder\":"+json[0].Data.id+",\"RoleName\":\""+name+"\",\"Status\":1,\"TgSpace\":"+$("#tgspace").val()+"}";
+		
+        $.ajax({
+            type: "post",
+            url: insertMenberRoles,
+            data: {param:param},
+            dataType: "json",
+            success: function(data){
+                //console.log(JSON.stringify(data));
+				layer.msg("新增成功",{icon:1,time:1000},function () {
+					window.history.back(-1)
+				});
+            },error:function(err){
+            }
+        });
+	}
+
+    $("#jcb").on("click",function () {
+		if($(this).prop("checked")==true){
+           var inputList=$(this).parents("td").siblings("td").find("input");
+           for(var i=0;i<inputList.length;i++){
+               inputList[i].checked =true;
+		   }
+		}else{
+            var inputList=$(this).parents("td").siblings("td").find("input");
+            for(var i=0;i<inputList.length;i++){
+                inputList[i].checked =false;
+            }
+		}
+    })
+    $("#zyb").on("click",function () {
+        if($(this).prop("checked")==true){
+            var inputList=$(this).parents("td").siblings("td").find("input");
+            for(var i=0;i<inputList.length;i++){
+                inputList[i].checked =true;
+            }
+        }else{
+            var inputList=$(this).parents("td").siblings("td").find("input");
+            for(var i=0;i<inputList.length;i++){
+                inputList[i].checked =false;
+            }
+        }
+    })
+	
+	
+	function valiCountNames(){
+		$.ajax({
+			type: "post",
+            url:valiCountName,
+            data:{name:$("#rolename").val()},
+            dataType: "json",
+            async:false,
+            success: function(data){
+			
+				if(!data.Success){
+					$("#rolename").val("");
+					layer.msg("角色已存在",{icon:2,time:1000});
+					return false;
+				}else{
+					return true;
+				}
+            },error:function(err){
+            	return false;
+            }
+		});
+	}
+</script>
+</body>
+</html>

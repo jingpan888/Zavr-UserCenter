@@ -1,0 +1,377 @@
+<!DOCTYPE HTML>
+<html xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8"><style type="text/css">[v-cloak] {
+            display: none;
+        }</style>
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<link rel="Bookmark" href="/favicon.ico" >
+<link rel="Shortcut Icon" href="/favicon.ico" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5shiv.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+<![endif]-->
+	<link rel="stylesheet" type="text/css" href="lib/layui/layui.css"/>
+	<link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+	<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+	<link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.8/iconfont.css" />
+	<link rel="stylesheet" type="text/css" href="lib/layer/2.4/skin/layer.css" />
+	<link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin" />
+	<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
+<!--[if IE 6]>
+<script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<title>管理员列表</title>
+</head>
+<body>
+<div id="app" v-cloak>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 代理员工管理 <span class="c-gray en">&gt;</span> 代理员工列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+	<div class="text-c">
+      所属代理名称：
+      	<input type="text" class="input-text" style="width:130px" placeholder="输入代理名称" name="agentName" id="agentName" v-model="agentName"/>  
+       员工账号：
+        <input type="text" class="input-text" style="width:130px" placeholder="输入账号" name="Identifier" id="Identifier" v-model="Identifier">        
+       员工姓名：
+        <input type="text" class="input-text" style="width:160px" placeholder="输入员工姓名" name="name" id="name" v-model="name">
+       员工性别：
+        <select id="gender" class="select" style="width:120px" v-model="gender">
+        	<option value="" disabled>不限</option>
+			<option value="1">男</option>
+			<option value="2">女</option>
+			<option value="3">保密</option>
+		</select>
+		员工类别：
+        <select id="type" class="select" v-model="type" style="width:120px">
+        	<option value="" disabled>不限</option>
+			<option value="2">经理</option>
+			<option value="1">管理员</option>
+			<option value="3">客服</option>
+			<option value="4">普通员工</option>
+		</select>
+		所属部门：
+		<select id="department" class="select" v-model="department" style="width:120px">
+			<option value="" disabled>不限</option>
+			<option value="1">管理员</option>
+			<option value="2">研发部</option>
+			<option value="3">产品部</option>
+			<option value="4">市场部</option>
+			<option value="5">创意部</option>
+		</select>
+       状态：
+        <select id="status" class="select" v-model="status" style="width:120px">
+        	<option value="" disabled>不限</option>
+			<option value="1">启用</option>
+			<option value="2">禁用</option>
+		</select>
+        <button type="button" class="btn btn-success radius" id="" name="" @click="AgentUserList(1)"><i class="Hui-iconfont">&#xe665;</i> 查询</button>
+    </div>
+	<div class="cl pd-5 bg-1 bk-gray mt-20">
+		<span class="l">
+			<a href="javascript:;" @click="admin_add('添加代理用户','agent-user-add.html')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加代理员工</a></span>
+		</span>
+		<span class="r">
+			总记录数：<strong>{{userInfo.RecordCount}}</strong> 条
+		</span>
+		<span class="r">
+			总页数：<strong>{{userInfo.PageCount}}</strong> 页，
+		</span>
+		<span class="r">
+			当前页：<strong>{{userInfo.PageIndex}}</strong> 页，
+		</span>
+	</div>
+
+	<table class="table table-border table-bordered table-hover table-bg table-sort" style="width:100%;white-space: nowrap;text-overflow: ellipsis;overflow: hidden">
+		<thead>
+			<tr class="text-c">
+				<!--<th width="25"><input type="checkbox" name="" value=""></th>-->
+				<th >编号</th>
+				<th >所属代理名称</th>
+				<th >员工账号</th>
+				<th >员工姓名</th>
+				<th >所属部门</th>
+				<th >员工性别</th>
+				<th >员工类别</th>
+				<th >员工电话</th>
+				<th >状态</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr class="text-c" v-for="u in userInfo.List" id="mydel">
+				<td>{{u.id}}</td>
+				<td>{{u.agent.name}}</td>
+				<td>{{u.userAuth.identifier}}</td>
+				<td>{{u.name}}</td>
+				<td v-show="u.department==0"></td>
+				<td v-show="u.department==1">管理员</td>
+				<td v-show="u.department==2">研发部</td>
+				<td v-show="u.department==3">产品部</td>
+				<td v-show="u.department==4">市场部</td>
+				<td v-show="u.department==5">创意部</td>
+				<td v-show="u.gender==0"></td>
+				<td v-show="u.gender==1">男</td>
+				<td v-show="u.gender==2">女</td>
+				<td v-show="u.gender==3">保密</td>
+				<td v-show="u.type==0"></td>
+				<td v-show="u.type==1">管理员</td>
+				<td v-show="u.type==2">经理</td>
+				<td v-show="u.type==3">客服</td>
+				<td v-show="u.type==4">普通员工</td>
+				<td>{{u.iphone}}</td>
+				<td v-show="u.status==0"></td>
+				<td v-show="u.status==1"><span class="label label-success radius">已启用</span></td>
+				<td v-show="u.status==2"><span class="label radius">已停用</span></td>
+				<td class="td-manage">
+					<a v-show="u.status==1" @Click="admin_stop(this,u.id,u.status)" href="javascript:;" title="停用" style="text-decoration:none"><i class="Hui-iconfont">&#xe631;</i></a>
+					<a v-show="u.status==2" @Click="admin_start(this,u.id,u.status)" href="javascript:;" title="启用" style="text-decoration:none"><i class="Hui-iconfont">&#xe615;</i></a>
+					<a title="编辑" href="javascript:;" @click="member_edit('编辑','agent-user-add.html',u.id)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a>
+					<a @click="agent_user_details('详情','agent_user_details.html',u.id)" href="javascript:;" title="详情" style="text-decoration:none"><i class="Hui-iconfont">&#xe720;</i></a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<div class="pagination" style="float: right">
+		<button class="btn btn-success" type="button" @click="AgentUserList('1')">首页</button>
+		<button class="btn btn-success" type="button" @click="AgentUserList(userInfo.PageIndex-1)">上一页</button>
+		<button class="btn btn-success" type="button" @click="AgentUserList(userInfo.PageIndex+1)">下一页</button>
+		<button class="btn btn-success" type="button" @click="AgentUserList(userInfo.PageCount)">尾页</button>
+	</div>
+
+</div>
+</div>
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script> 
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="lib/My97DatePicker/4.8/WdatePicker.js"></script> 
+<script type="text/javascript" src="lib/datatables/1.10.0/jquery.dataTables.min.js"></script> 
+<script type="text/javascript" src="lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="lib/layui/layui.all.js"></script>
+<script type="text/javascript" src="lib/vue.min.js"></script>
+<script type="text/javascript" src="lib/request.js"></script>
+<script type="text/javascript">
+    // 创建一个 Vue 实例或 "ViewModel"
+    // 它连接 View 与 Model
+    var vue = new Vue({
+        el: '#app',
+        data: {
+            message:'Hello World!!!',
+            userInfo:[],
+            uid:'',
+            agentName:'',
+            name:'',
+            gender:'',
+            status:'',
+            type:'',
+            Identifier:'',
+            password:'',
+            department:'',
+			iphone:''
+        }
+    });
+    //代理信息分页列表
+    function AgentUserList(index) {
+        if(index>vue.userInfo.PageCount){
+            layui.use(['laydate', 'laypage', 'layer', 'table', 'carousel', 'upload', 'element'], function() {
+                var layer = layui.layer;
+                //向世界问个好
+                layer.msg('已经是最后一页');
+            });
+            // index = vue.listInfo.PageCount;
+            return;
+        }
+        if(index<1){
+            index = 1;
+            layui.use(['laydate', 'laypage', 'layer', 'table', 'carousel', 'upload', 'element'], function() {
+                var layer = layui.layer;
+                //向世界问个好
+                layer.msg('已经是第一页');
+            });
+            return;
+        }
+      
+        var param = "{\"PageIndex\":"+index+",\"PageSize\":10,\"Query\":{\"Name\":\""+vue.name+"\",\"Department\":\""+vue.department+"\",\"agentName\":\""+vue.agentName+"\",\"Gender\":\""+vue.gender+"\",\"Type\":\""+vue.type+"\",\"Status\":\""+vue.status+"\",\"Identifier\":\""+vue.Identifier+"\"}}";
+        console.log(param);
+        $.ajax({
+            type: "post",
+            url: QueryAgentUsers,
+            data: {parameter:param},
+            dataType: "json",
+            success: function(data){
+                console.log(JSON.stringify(data));
+                if(data.List.length==0){
+                	layer.msg("没有相关数据",{icon:5})
+                }else{
+                	vue.userInfo = data;
+                }
+            },
+            error:function(err){
+                alert(JSON.parse(err));
+            }
+        });
+    }
+
+    $(function(){
+        AgentUserList(1);
+        $('.table-bg').dataTable({
+            "aaSorting": [[ 1, "desc" ]],//默认第几个排序
+            "paging": false, // 禁止分页
+            "bStateSave": true,//状态保存
+            "bFilter": false,//不显示搜索
+            "bLengthChange": false,//不显示每页显示条数选项
+            // "aoColumnDefs": [
+            //   // {"bVisible": false, "aTargets": [ 3 ]}, //控制列的隐藏显示
+            //   {"orderable":false,"aTargets":[1]}// 制定列不参与排序
+            // ],
+            "ordering": false, // 禁止排序
+            "language": {
+                "info": ""// 表格左下角显示的文字
+            }
+
+        }).fnAddData(vue.userInfo,true);
+        $(".odd").remove();
+    });
+
+	/*
+	参数解释：
+	title	标题
+	url		请求的url
+	id		需要操作的数据id
+	w		弹出层宽度（缺省调默认值）
+	h		弹出层高度（缺省调默认值）
+*/
+/*代理-增加*/
+function admin_add(title,url){
+	layer.open({
+		type: 2,
+		title:title,
+		area: ['800px', '600px'],
+		fixed: true,
+		maxmin: false,
+		content: url,
+		end:function(){
+			vue.name='',
+			vue.aid='',
+			vue.gender='',
+			vue.type='',
+			vue.status='',
+			vue.Identifier='',
+			AgentUserList(vue.userInfo.PageCount);
+		}
+	})
+}
+/*代理员工-详情*/
+function agent_user_details(title,url,id){
+	if(id!=''){
+		url = url+"?ID="+id;
+		layer.open({
+			type: 2,
+			title:title,
+			area: ['800px', '600px'],
+			fixed: true,
+			maxmin: false,
+			content: url
+		})
+	}
+}
+
+/*管理员-编辑*/
+function member_edit(title,url,id){
+	if(id!=''){
+		url = url+"?ID="+id;
+		layer.open({
+			type: 2,
+			title:title,
+			area: ['800px', '600px'],
+			fixed: true,
+			maxmin: false,
+			content: url,
+			end:function(){
+				vue.name='',
+				vue.aid='',
+				vue.gender='',
+				vue.type='',
+				vue.status='',
+				vue.Identifier='',
+				AgentUserList(vue.userInfo.PageIndex);
+			}
+		})
+	}
+}
+/*启用-停用*/
+function admin_stop(obj,uid,status){
+	status = 2;
+	var parameter="{'UID':"+uid+",'Status':"+status+"}";
+	layer.confirm("确认要停用吗",{
+		btn: ['确认','取消'] //按钮
+	},function(){
+		$.ajax({
+			type:"post",
+			url: SetAgentUserState,
+			data:{parameter:parameter},
+			dataType:'json',
+			success: function(data){
+				console.log(data);
+				if(data.Success){
+					$(obj).parents("tr").find(".td-manage").prepend('<a @Click="admin_start(this,u.id.u.status)" href="javascript:;" title="启用" style="text-decoration:none"><i class="Hui-iconfont">&#xe615;</i></a>');
+					$(obj).parents("tr").find(".td-status").html('<span class="label label-default radius">已禁用</span>');
+					$(obj).remove();
+					layer.msg('已停用!',{icon: 1,time:1000},function(){
+						AgentUserList(vue.userInfo.PageIndex);
+					});
+				}else{
+					layer.msg(data.Message,{icon: 5,time:1000},function(){
+						AgentUserList(vue.userInfo.PageIndex);
+					});
+				}
+			},
+            error:function(err) {
+                layer.msg('异常'+JSON.stringify(err),{icon: 5,time:1000});
+			},
+		});
+	});
+}
+
+/*管理员-启用*/
+function admin_start(obj,uid,status){
+	status=1;
+	var parameter="{'UID':"+uid+",'Status':"+status+"}";
+	layer.confirm('确认要启用吗？',{
+		btn: ['确认','取消']  //按钮
+	},function(){
+		$.ajax({
+			type:"post",
+			url: SetAgentUserState,
+			data:{parameter:parameter},
+			dataType:'json',
+			success: function(data){
+				console.log(data);
+				if(data.Success){
+					$(obj).parents("tr").find(".td-manage").prepend('<a @Click="admin_stop(this,u.id,u.status)" href="javascript:;" title="停用" style="text-decoration:none"><i class="Hui-iconfont">&#xe631;</i></a>');
+					$(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">已启用</span>');
+					$(obj).remove();
+					layer.msg('已启用!',{icon: 1,time:3000},function(){
+						AgentUserList(vue.userInfo.PageIndex);
+					});
+				}else{
+					layer.msg(data.Message,{icon: 5,time:3000});
+				}
+			},
+            error:function(err) {
+                layer.msg('异常'+JSON.stringify(err),{icon: 5,time:1000});
+			},
+		});
+	});
+}
+</script>
+</body>
+</html>

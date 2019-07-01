@@ -1,0 +1,198 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8"><style type="text/css">[v-cloak] {
+            display: none;
+        }</style>
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5shiv.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.8/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" href="./lib/layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <!--[if IE 6]>
+    <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script>DD_belatedPNG.fix('*');</script>
+
+    <![endif]-->
+    <title>代理详情</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <style>
+        .col-sm-3 {
+            width: 18%;
+        }
+
+        .layui-colla-title {
+            padding: 0 0 0 5px;
+            color: #000;
+            background-color: transparent;
+        }
+
+        .layui-badge-rim, .layui-colla-content, .layui-colla-item, .layui-collapse, .layui-elem-field, .layui-form-pane .layui-form-item[pane], .layui-form-pane .layui-form-label, .layui-input, .layui-layedit, .layui-layedit-tool, .layui-quote-nm, .layui-select, .layui-tab-bar, .layui-tab-card, .layui-tab-title, .layui-tab-title .layui-this:after, .layui-textarea {
+            border: none;
+        }
+
+        .layui-colla-icon {
+            display: none;
+        }
+
+        dd .layui-colla-title {
+            height: 36px;
+            line-height: 36px;
+            color: #333;
+        }
+
+        .layui-colla-content {
+            padding: 0 15px;
+        }
+
+        .layui-colla-item {
+            cursor: pointer;
+        }
+
+        dl {
+            display: none;
+        }
+
+        dd div {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<article class="page-container" id="app" v-cloak>
+    <div class="pd-20">
+        <table class="table table-border table-bordered table-hover table-bg table-sort table-striped">
+            <tbody>
+            <tr>
+                <th class="text-c" width="80">姓名：</th>
+                <td>{{listInfo.Name}}</td>
+            </tr>
+            <tr>
+                <th class="text-r">手机号：</th>
+                <td>{{listInfo.EmployeePhone}}</td>
+            </tr>
+            <tr>
+                <th class="text-r">部门：</th>
+                <td>{{listInfo.departmentName}}</td>
+            </tr>
+            <tr>
+                <th class="text-r">职位：</th>
+                <td>{{listInfo.positionName}}</td>
+            </tr>
+            <tr>
+                <th class="text-r">状态：</th>
+                <td v-if="listInfo.Status==0"></td>
+                <td v-if="listInfo.Status==1"><span class="label label-success radius">启用</span></td>
+                <td v-if="listInfo.Status==2"><span class="label label-default radius" style="color:#FF0000 ">禁用</span>
+                </td>
+                <td v-if="listInfo.Status==3"><span class="label label-danger radius">删除</span></td>
+            </tr>
+            <tr>
+                <td>
+                    权限：
+                </td>
+                <td>
+                    <ul class="layui-collapse" style="overflow-y:scroll;height:180px;width: 95%">
+                        <li class="layui-colla-item" v-for="i in menus">
+                            <p class="layui-colla-title">
+                                <input type="checkbox" :value="i.id" name="meunsID" v-if="i.haveMenu==1"
+                                       checked="checked" disabled="disabled">
+                                <input type="checkbox" :value="i.id" name="meunsID" v-if="i.haveMenu!=1"
+                                       disabled="disabled">
+                                <label>{{i.name}}</label>
+                            </p>
+                            <dl class="layui-colla-content" v-for="j in i.childList" style="display: block">
+                                <dd class="layui-colla-item">
+                                    <p class="layui-colla-title">
+                                        <input type="checkbox" :id="j.id+'sj'" :value="j.id" name="meunsID"
+                                               v-if="j.haveMenu==1" checked="checked" disabled="disabled">
+                                        <input type="checkbox" :id="j.id+'sj'" :value="j.id" name="meunsID"
+                                               v-if="j.haveMenu!=1" disabled="disabled">
+                                        <label :for="j.id+'sj'">{{j.name}}</label>
+                                    </p>
+                                </dd>
+                            </dl>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</article>
+
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<script type="text/javascript" src="lib/layui/layui.all.js"></script>
+<script type="text/javascript" src="lib/vue.min.js"></script>
+<script type="text/javascript" src="lib/request.js"></script>
+<script type="text/javascript">
+
+    var vue = new Vue({
+        el: '#app',
+        data: {
+            listInfo: '',
+            id: UrlParam.paramValues("ID"),
+            pid: UrlParam.paramValues("PID"),
+            name: '',//员工名称
+            employeePhone: '',//员工手机号
+            status: '',
+            type: '',
+            menus:[]
+        }
+    });
+
+    GetPlatUserProfileInfo();
+    $("li").on("click", function () {
+        if ($(this).find("dl").css("display") == "none") {
+            $(this).find("dl").show()
+        } else {
+            $(this).find("dl").hide()
+        }
+    });
+    $("dd").on("click", function (e) {
+        e.stopPropagation();
+        if ($(this).find("div").css("display") == "none") {
+            $(this).find("div").show()
+        } else {
+            $(this).find("div").hide()
+        }
+    })
+
+    function GetPlatUserProfileInfo() {
+        var param = "{\"ID\":" + vue.id + ",\"PositionId\":" + vue.pid + "}";
+        $.ajax({
+            type: "post",
+            url: GetPlatUserProfileByKey,
+            data: {param: param},
+            dataType: "json",
+            success: function (data) {
+                vue.listInfo = data.platById;
+                vue.menus = data.menu;
+            }
+        });
+    }
+</script>
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>

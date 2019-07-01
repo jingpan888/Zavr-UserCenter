@@ -1,0 +1,480 @@
+<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8"><style type="text/css">[v-cloak] {
+            display: none;
+        }</style>
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<link rel="Bookmark" href="/favicon.ico" >
+<link rel="Shortcut Icon" href="/favicon.ico" />
+<link rel="stylesheet" type="text/css" href="lib/jquery.searchableSelect/jquery.searchableSelect.css"/>
+<!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5shiv.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.8/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
+
+<!--[if IE 6]>
+<script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<!--/meta 作为公共模版分离出去-->
+<style>
+	.col-sm-3{
+		width: 18%;
+	}
+</style>
+<title>添加用户</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+</head>
+<body>
+<article class="page-container" id="app" v-cloak>
+	<form action="" method="post" class="form form-horizontal" id="form-member-add" onsubmit="">
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>企业名称：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" v-model="name" placeholder="" id="name" name="name">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>所属代理名称：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<!--<input type="text" class="input-text" placeholder="" id="aid" name="aid" v-model="aid">-->
+                <select id="keyname" class="keyname">
+
+                </select>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>企业Logo：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="" id="logo" name="logo" v-model="logo">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>企业性质：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<!--<input type="text" class="input-text" value="" placeholder="" id="username" name="username"/>-->
+				<select id="nature" class="select" name="nature">
+		        <option value="1" selected>政府机关</option>
+		        <option value="2">事业单位</option>
+		        <option value="3">国企</option>
+		        <option value="4">央企</option>
+		        <option value="6">合资</option>
+		        <option value="7">民营</option>
+		        <option value="8">非盈利机关</option>
+		        <option value="9">个人</option>
+		    </select>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>省市区：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<div data-toggle="distpicker">
+					<select id="province" name="province" style="font-size: 14px" v-model="province"></select>
+					<select id="city" name="city" style="font-size: 14px" v-model="city"></select>
+					<select id="region" name="region" style="font-size: 14px" v-model="region"></select>
+				</div>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>详细地址：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="" id="address" name="address" v-model="address">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>代理级别：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<select id="level" class="select" name="level">
+					<option value="1" selected>普通代理</option>
+					<option value="2">Vip代理</option>
+					<option value="3">钻石代理</option>
+					<option value="4">至尊代理</option>
+				</select>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>联系人：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="" id="linkman" name="linkman" v-model="linkman">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>联系人手机：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="" id="mobile" name="mobile" v-model="linkmobilephone">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>联系座机：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="" id="phone" name="phone" v-model="linktelephone">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>联系邮箱：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" placeholder="@" name="email" id="email" v-model="email">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>状态：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="radio" carousel-item="input-radio" checked placeholder="" id="status" value="1" name="status" v-model="status"><span class="label label-default radius">申请中</span>
+				<input type="radio" carousel-item="input-radio" placeholder="" id="status" value="2" name="status" v-model="status"><span class="label label-success radius">正常</span>
+				<input type="radio" carousel-item="input-radio" placeholder="" id="status" value="3" name="status" v-model="status"><span class="label label-primary radius">禁用</span></td>
+				<input type="radio" carousel-item="input-radio" placeholder="" id="status" value="4" name="status" v-model="status"><span class="label label-warning radius">删除</span></td>
+			</div>
+		</div>
+		<!--<div class="row cl">-->
+			<!--<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>性别：</label>-->
+			<!--<div class="formControls col-xs-8 col-sm-9 skin-minimal">-->
+				<!--<div class="radio-box">-->
+					<!--<input name="sex" type="radio" id="sex-1" checked>-->
+					<!--<label for="sex-1">男</label>-->
+				<!--</div>-->
+				<!--<div class="radio-box">-->
+					<!--<input type="radio" id="sex-2" name="sex">-->
+					<!--<label for="sex-2">女</label>-->
+				<!--</div>-->
+				<!--<div class="radio-box">-->
+					<!--<input type="radio" id="sex-3" name="sex">-->
+					<!--<label for="sex-3">保密</label>-->
+				<!--</div>-->
+			<!--</div>-->
+		<!--</div>-->
+		<!--<div class="row cl">-->
+			<!--<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>手机：</label>-->
+			<!--<div class="formControls col-xs-8 col-sm-9">-->
+				<!--<input type="text" class="input-text" value="" placeholder="" id="mobile" name="mobile">-->
+			<!--</div>-->
+		<!--</div>-->
+
+		<!--<div class="row cl">-->
+			<!--<label class="form-label col-xs-4 col-sm-3">附件：</label>-->
+			<!--<div class="formControls col-xs-8 col-sm-9"> <span class="btn-upload form-group">-->
+				<!--<input class="input-text upload-url" type="text" name="uploadfile" id="uploadfile" readonly nullmsg="请添加附件！" style="width:200px">-->
+				<!--<a href="javascript:void(0);" class="btn btn-primary radius upload-btn"><i class="Hui-iconfont">&#xe642;</i> 浏览文件</a>-->
+				<!--<input type="file" multiple name="file-2" class="input-file">-->
+				<!--</span> </div>-->
+		<!--</div>-->
+		<!--<div class="row cl">-->
+			<!--<label class="form-label col-xs-4 col-sm-3">备注：</label>-->
+			<!--<div class="formControls col-xs-8 col-sm-9">-->
+				<!--<textarea name="beizhu" cols="" rows="" class="textarea"  placeholder="说点什么...最少输入10个字符" onKeyUp="$.Huitextarealength(this,100)"></textarea>-->
+				<!--<p class="textarea-numberbar"><em class="textarea-length">0</em>/100</p>-->
+			<!--</div>-->
+		<!--</div>-->
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+				<input class="btn btn-primary radius" type="submit" value=" 提交 " id="tijiao" ><!--onclick="updateEnterprises()" -->
+			</div>
+		</div>
+	</form>
+</article>
+
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/jquery.searchableSelect/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="lib/jquery.searchableSelect/jquery.searchableSelect.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.js"></script> 
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script> 
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<script type="text/javascript" src="lib/layui/layui.all.js"></script>
+<script type="text/javascript" src="lib/vue.min.js"></script>
+
+<script type="text/javascript" src="lib/request.js"></script>
+<script type="text/javascript">
+    var vue = new Vue({
+        el: '#app',
+        data: {
+            info:'',
+			date:[],
+            // [name,aid,logo,nature,province,city,region,address,level,linkman,linkmobilephone,linktelephone,email,status]
+            aid:'',
+			name:'',//企业名称
+			logo:'',
+        	nature:0,
+			province:'',
+			city:'',
+			region:'',
+			address:'',
+			level:0,
+			linkman:'',
+			linkmobilephone:'',
+			linktelephone:'',
+			email:'',
+			status:''
+        }
+    });
+$(document).ready(function(){
+	// $("#tijiao").mouseover(function(){layer.msg('请确保信息已填写且格式无误');
+     //    layui.use(['laydate', 'laypage', 'layer', 'table', 'carousel', 'upload', 'element'], function() {
+     //        var layer = layui.layer;
+     //        //向世界问个好
+    //
+     //    });
+	// });
+	// $("tijiao").mouseout(function(){
+    //
+	// });
+});
+$(function(){
+    vue.info = UrlParam.paramValues("param");
+    if(vue.info!=undefined){
+        GetEnterprisesInfo();
+    }else{
+        $.ajax({
+            type: "post",
+            url:AgentGetKeyName,
+            dataType: "json",
+            success: function(data){
+                var optionAdd = "";
+                vue.date = data.List;
+                for(var js2 in vue.date){
+                    optionAdd = optionAdd + "<option value='"+vue.date[js2].id+"' v-model='aid'>"+vue.date[js2].name+"</option>";
+                }
+                $("#keyname").empty();
+                $("#keyname").append(optionAdd);
+                $('.keyname').searchableSelect();
+            },error:function(err){
+                layer.msg('程序异常，错误代码'+JSON.stringify(err));
+            }
+        });
+    }
+
+
+	/*$('.skin-minimal input').iCheck({
+		checkboxClass: 'icheckbox-blue',
+		radioClass: 'iradio-blue',
+		increaseArea: '20%'
+	});*/
+
+	$("#form-member-add").validate({
+		rules:{
+            name:{
+				required:true,
+				minlength:2,
+				maxlength:16
+			},
+            aid:{
+                required:true,
+                isDigits:true,
+			},
+			sex:{
+				required:true,
+			},
+			mobile:{
+				required:true,
+				isMobile:true,
+			},
+			email:{
+				required:true,
+				email:true,
+			},
+            logo:{
+                required:true,
+			},
+            address:{
+                required:true,
+            },
+            linkman:{
+                required:true,
+            },
+            phone:{
+                required:true,
+                isTel:true,
+            },
+			// uploadfile:{
+			// 	required:true,
+			// },
+		},
+		onkeyup:false,
+		focusCleanup:true,
+		success:"valid",
+		submitHandler:function(form){
+            //$(form).ajaxSubmit();
+            var index = parent.layer.getFrameIndex(window.name);
+            //parent.$('.btn-refresh').click();
+
+            if(vue.info!=undefined){
+                updateEnterprises();
+                // parent.layer.close(index);
+
+            }else{
+                addEnterprisesInfo()
+				// parent.layer.close(index);
+
+            }
+
+		}
+	});
+});
+
+
+function GetEnterprisesInfo() {
+    var param = "{\"EID\":"+vue.info+"}";
+    // console.log(param);
+    $.ajax({
+        type: "post",
+        // url: GetEnterprisesByKey,
+        url:GetEnterpriseAndAgentKeyName,
+        data: {param:param},
+        dataType: "json",
+        success: function(data){
+            // console.log(JSON.stringify(data.Data));
+            vue.date = data.Data;
+            vue.aid = data.Data.aid;
+            vue.name=data.Data.name;//企业名称
+            vue.logo=data.Data.logo;
+            vue.nature=data.Data.nature;
+            vue.province=data.Data.province;
+            vue.city=data.Data.city;
+            vue.region=data.Data.region;
+            vue.address=data.Data.address;
+            vue.level=data.Data.level;
+            vue.linkman=data.Data.linkman;
+            vue.linkmobilephone=data.Data.linkmobilephone;
+            vue.linktelephone=data.Data.linktelephone;
+            vue.email=data.Data.email;
+            vue.status=data.Data.status;
+            $("#province").val(vue.province);
+            $("#province").trigger("change");
+            $("#city").val(vue.city);
+            $("#city").trigger("change");
+            $("#region").val(vue.region);
+            $("#region").trigger("change");
+
+			var options = document.getElementById('level').children;
+			options[vue.level-1].selected=true;
+            var options = document.getElementById('nature').children;
+            options[vue.nature-1].selected=true;
+
+            $(":radio[name='status'][value='" + vue.status + "']").prop("checked", "checked");
+
+            var optionAdd = "";
+            for(var js2 in vue.date.keyName){
+                optionAdd = optionAdd + "<option value='"+vue.date.keyName[js2].id+"' v-model='aid'>"+vue.date.keyName[js2].name+"</option>";
+            }
+            $("#keyname").empty();
+            $("#keyname").append(optionAdd);
+            $('#keyname').val(vue.aid);
+            $('#keyname').change();
+            $('.keyname').searchableSelect();
+			// JSON.stringify()
+        },error:function(err){
+            layer.msg('程序异常，错误代码'+JSON.stringify(err));
+            // alert(JSON.parse(err));
+        }
+    });
+}
+
+function valiType() {
+	if(vue.info!=undefined){
+        updateEnterprises();
+	}else{
+        addEnterprisesInfo();
+	}
+}
+// 新增企业
+function addEnterprisesInfo() {
+    var aid=$("#keyname option:selected"); //获取选中的项
+    vue.aid=aid.val();//拿到选中项的值
+    var options1=$("#region option:selected"); //获取选中的项
+    vue.region=options1.text();//拿到选中项的值
+    // alert(options.text()); //拿到选中项的文本
+    var options2=$("#province option:selected"); //获取选中的项
+    vue.province=options2.text();//拿到选中项的值
+    var options3=$("#city option:selected"); //获取选中的项
+    vue.city=options3.text();//拿到选中项的值
+
+    var options4=$("#nature option:selected"); //获取选中的项
+    vue.nature=options4.val();//拿到选中项的值
+    if(vue.nature==''|| vue.nature == null || vue.nature == undefined){
+        layer.msg('信息不完整');alert("11");
+        return;
+    }
+    var param = "{\"AID\":"+vue.aid+",\"Name\":\""+vue.name+"\",\"Province\":\""+vue.province+"\",\"City\":\""+vue.city+"\",\"Region\":\""+vue.region+"\",\"Address\":\""+vue.address+"\",\"Linkman\":\""+vue.linkman+"\",\"LinkMobilePhone\":\""+vue.linkmobilephone+"\",\"LinkTelePhone\":\""+vue.linktelephone+"\",\"Email\":\""+vue.email+"\",\"Logo\":\""+vue.logo+"\",\"Nature\":"+vue.nature+",\"Op\":\""+getCookie("islogin")+"\"}";
+
+    $.ajax({
+        type: "post",
+        url: CreateEnterprise,
+        data: {param:param},
+        dataType: "json",
+        success: function(data){
+            // console.log(JSON.stringify(data));
+            // layui.use(['laydate', 'laypage', 'layer', 'table', 'carousel', 'upload', 'element'], function() {
+            //     var layer = layui.layer;
+            //     layer.msg('Success');
+            // });
+            if(data.Success){
+                alert("成功");
+                layer.msg('Success', {icon: 6,time:5000});
+                var index = parent.layer.getFrameIndex(window.name);
+                window.parent.location.reload();//刷新父页面
+                parent.layer.close(index);//关闭弹出层
+            }else{
+                layer.msg(data.Message, {icon: 5});
+            }
+        },error:function(err){
+            layer.msg('程序异常，错误代码'+JSON.stringify(err), {icon: 5});
+            // alert(JSON.parse(err));
+        }
+    });
+}
+
+//更新信息
+function updateEnterprises() {
+    var aid=$("#keyname option:selected"); //获取选中的项
+    vue.aid=aid.val();//拿到选中项的值
+    var param = "{\"EID\":"+vue.info+",\"AID\":"+vue.aid+",\"Name\":\""+vue.name+"\",\"Province\":\""+vue.province+"\",\"City\":\""+vue.city+"\",\"Region\":\""+vue.region+"\",\"Address\":\""+vue.address+"\",\"Linkman\":\""+vue.linkman+"\",\"LinkMobilePhone\":\""+vue.linkmobilephone+"\",\"LinkTelePhone\":\""+vue.linktelephone+"\",\"Email\":\""+vue.email+"\",\"Logo\":\""+vue.logo+"\",\"Nature\":"+vue.nature+",\"Op\":\"\"}";
+    alert(param)
+    $.ajax({
+        type: "post",
+        url: SetEnterprise,
+        data: {param:param},
+        dataType: "json",
+        success: function(data){
+            // console.log(JSON.stringify(data));
+            // layui.use(['laydate', 'laypage', 'layer', 'table', 'carousel', 'upload', 'element'], function() {
+            //     var layer = layui.layer;
+				// layer.msg('Success');
+            // });
+            if(data.Success){
+                alert("成功");
+                layer.msg('Success', {icon: 6,time:5000});
+                var index = parent.layer.getFrameIndex(window.name);
+                window.parent.location.reload();//刷新父页面
+                parent.layer.close(index);//关闭弹出层
+            }else{
+                layer.msg(data.Message, {icon: 5});
+
+            }
+        },error:function(err){
+            layer.msg('程序异常，错误代码'+JSON.stringify(err));
+
+            // alert(JSON.parse(err));
+        }
+    });
+}
+
+</script> 
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>

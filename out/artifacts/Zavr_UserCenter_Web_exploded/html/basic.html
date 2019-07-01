@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="lib/layer/2.4/skin/layer.css">
+    <style>
+        h1 {
+            border-bottom: 1px solid #ccc;
+            font-weight: 400;
+        }
+
+        button {
+            width: 100px;
+            height: 36px;
+            background-color: #f2f2f2;
+            color: #333;
+            border: none;
+            margin-bottom: 20px;
+        }
+
+        button, input {
+            outline: none;
+            height: 36px;
+            line-height: 36px;
+        }
+
+        .blueBtn {
+            background-color: #4abadb;
+            color: #fff;
+        }
+
+        #personBox > div {
+            display: flex;
+            justify-content: flex-start;
+            margin-right: 30px;
+        }
+
+        #personBox p {
+            line-height: 14px;
+        }
+
+        input {
+            border: 1px solid #ccc;
+            width: 190px;
+            padding-left: 10px;
+            border-radius: 3px;
+        }
+
+        #personBox input {
+            background-color: #ebebeb;
+            border: 1px solid #ccc;
+            color: #666;
+        }
+
+        #safeBox {
+            padding-left: 90px;
+            margin-top: 40px;
+        }
+
+        #safeBox > div {
+            margin-bottom: 20px;
+        }
+
+        #safeBox span {
+            margin-right: 10px;
+        }
+
+        #safeBox button {
+            border-radius: 5px;
+            margin-left: 20px;
+        }
+    </style>
+</head>
+<body>
+<h1 style="margin-left: 60px">账号信息</h1>
+<button onclick="changeCheck(this)" class="person blueBtn" style="margin-right: 20px;margin-left: 60px;">个人资料</button>
+<button onclick="changeCheck(this)" class="safe">账号安全</button>
+<div id="app">
+    <div id="personBox">
+        <div>
+            <div style="margin-right: 30px;margin-left: 90px">
+                <p>姓名</p>
+                <input type="text" :value="listInfo.Name" disabled="disabled">
+            </div>
+            <div>
+                <p>手机</p>
+                <input type="text" :value="listInfo.EmployeePhone" disabled="disabled">
+            </div>
+        </div>
+        <div>
+            <div style="margin-right: 30px;margin-left: 90px">
+                <p>部门</p>
+                <input type="text" :value="listInfo.departmentName" disabled="disabled">
+            </div>
+            <div>
+                <p>职位</p>
+                <input type="text" :value="listInfo.positionName" disabled="disabled">
+            </div>
+        </div>
+    </div>
+    <div id="safeBox" style="display: none">
+        <div>
+            <span>原密码</span>
+            <input type="password" id="OldPassword" v-model="OldPassword"
+                   onchange="valiForPossword()" onblur="valiForPossword()" maxlength="16" placeholder="请输入原密码">
+        </div>
+        <div>
+            <span>新密码</span>
+            <input type="password" id="NewPassword" v-model="NewPassword"
+                   onchange="valiForPossword()" onblur="valiForPossword()" maxlength="16" placeholder="请输入新密码">
+        </div>
+        <div>
+            <span>新密码</span>
+            <input type="password" id="ConPossword" v-model="ConPassword"
+                   onchange="valiForPossword()" onblur="valiForPossword()" maxlength="16" placeholder="请再次输入新密码">
+        </div>
+        <button class="blueBtn" onclick="checkModificationPassword()">确认修改</button>
+        <button style="background-color: #fff;color: #666;border: 1px solid #ccc">取消</button>
+    </div>
+</div>
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.js"></script>
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.cookie.js"></script>
+<script type="text/javascript" src="lib/jquery/1.9.1/vue.js"></script>
+<script type="text/javascript" src="lib/request.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script>
+    var vue = new Vue({
+        el: '#app',
+        data: {
+            listInfo: '',
+            OldPassword: '',
+            NewPassword: '',
+            ConPassword: ''
+        }
+    });
+
+    function changeCheck(obj) {
+        $(obj).addClass("blueBtn").siblings("button").removeClass("blueBtn");
+        if ($(obj).hasClass("person") == true) {
+            $("#personBox").show().siblings("div").hide();
+        } else {
+            $("#personBox").hide().siblings("div").show();
+        }
+    }
+
+    $(document).ready(function () {
+        var islogin = JSON.parse($.cookie("islogin"));
+        var param = "{\"ID\":\"" + islogin.Data.id + "\"}";
+        $.ajax({
+            type: "post",
+            url: SearchEmployeeInformation,
+            data: {param: param},
+            dataType: "json",
+            success: function (data) {
+                vue.listInfo = data;
+            },
+            error: function (err) {
+                layer.msg('程序异常，错误代码' + JSON.stringify(err));
+            }
+        });
+    })
+
+    function setInputBorder(val) {
+        $("input[id='" + val + "']").css({
+            "color": "#D15B61",
+            "border": "1px solid #D15B61"
+        });
+
+    }
+
+    function clearInputBorder(val) {
+        $("input[id='" + val + "']").css({
+            "color": "",
+            "border": ""
+        });
+    }
+
+    function checkModificationPassword() {
+        if (vue.OldPassword == '' || vue.NewPassword == '' || vue.ConPassword == '') {
+            layer.msg('请完善信息!', {icon: 5, time: 1000});
+            return;
+        }
+        var NewPassword = $("#NewPassword").val();
+        var ConPassword = $("#ConPossword").val();
+        var reg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$/;
+        if (vue.OldPassword == '') {
+            setInputBorder("OldPassword");
+            $("#OldPassword").parent().find(".errorHint").remove();
+            $("#OldPassword").parent().append("<span class='errorHint'>请输入原密码!</span>");
+            return false;
+        } else {
+            clearInputBorder("OldPassword");
+            $("#OldPassword").parent().find(".errorHint").remove();
+        }
+        if (NewPassword == '') {
+            setInputBorder("NewPassword");
+            $("#NewPassword").parent().find(".errorHint").remove();
+            $("#NewPassword").parent().append("<span class='errorHint'>请输入新密码!</span>");
+            return false;
+        } else if (!reg.test(NewPassword)) {
+            setInputBorder("NewPassword");
+            $("#NewPassword").parent().find(".errorHint").remove();
+            $("#NewPassword").parent().append("<span class='errorHint'>仅支持8-16位英文字母和数字组合!</span>");
+            return false;
+        } else {
+            clearInputBorder("NewPassword");
+            $("#NewPassword").parent().find(".errorHint").remove();
+        }
+        if (ConPassword == '') {
+            setInputBorder("ConPossword");
+            $("#ConPossword").parent().find(".errorHint").remove();
+            $("#ConPossword").parent().append("<span class='errorHint'>请输入确认密码!</span>");
+            return false;
+        } else if (NewPassword != ConPassword) {
+            setInputBorder("NewPassword");
+            setInputBorder("ConPossword");
+            $("#ConPossword").parent().find(".errorHint").remove();
+            $("#ConPossword").parent().append("<span class='errorHint'>密码不一致，请重新输入!</span>");
+            return false;
+        } else {
+            clearInputBorder("NewPassword");
+            $("#NewPassword").parent().find(".errorHint").remove();
+            clearInputBorder("ConPossword");
+            $("#ConPossword").parent().find(".errorHint").remove();
+        }
+        var islogin = JSON.parse($.cookie("islogin"));
+        var param = "{\"ID\":" + islogin.Data.id + ",\"OldPassword\":\"" + vue.OldPassword + "\",\"NewPassword\":\"" + NewPassword + "\"}";
+        $.ajax({
+            type: 'post',
+            url: ModifyPlatUserPassword,
+            data: {param: param},
+            dataType: 'json',
+            success: function (data) {
+                if (data.Success) {
+                    layer.msg('修改成功', {icon: 6, time: 1000}, function () {
+                        setCookie("islogin", '', -1);
+                        valiLogin();
+                    })
+                } else {
+                    if (data.Message == 1) {
+                        $("#OldPassword").parent().append("<span class='errorHint'>原密码错误,请重新输入!</span>");
+                    }
+                }
+            }
+        });
+    }
+
+    function valiForPossword() {
+        var NewPassword = $("#NewPassword").val();
+        var ConPassword = $("#ConPossword").val();
+        var reg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$/;
+        if (vue.OldPassword == '') {
+            setInputBorder("OldPassword");
+            $("#OldPassword").parent().find(".errorHint").remove();
+            $("#OldPassword").parent().append("<span class='errorHint'>请输入原密码!</span>");
+            return false;
+        } else {
+            clearInputBorder("OldPassword");
+            $("#OldPassword").parent().find(".errorHint").remove();
+        }
+        if (NewPassword == '') {
+            setInputBorder("NewPassword");
+            $("#NewPassword").parent().find(".errorHint").remove();
+            $("#NewPassword").parent().append("<span class='errorHint'>请输入新密码!</span>");
+            return false;
+        } else if (!reg.test(NewPassword)) {
+            setInputBorder("NewPassword");
+            $("#NewPassword").parent().find(".errorHint").remove();
+            $("#NewPassword").parent().append("<span class='errorHint'>仅支持8-16位英文字母和数字组合!</span>");
+            return false;
+        } else {
+            clearInputBorder("NewPassword");
+            $("#NewPassword").parent().find(".errorHint").remove();
+        }
+        if (ConPassword == '') {
+            setInputBorder("ConPossword");
+            $("#ConPossword").parent().find(".errorHint").remove();
+            $("#ConPossword").parent().append("<span class='errorHint'>请输入确认密码!</span>");
+            return false;
+        } else if (NewPassword != ConPassword) {
+            setInputBorder("NewPassword");
+            setInputBorder("ConPossword");
+            $("#ConPossword").parent().find(".errorHint").remove();
+            $("#ConPossword").parent().append("<span class='errorHint'>密码不一致，请重新输入!</span>");
+            return false;
+        } else {
+            clearInputBorder("NewPassword");
+            $("#NewPassword").parent().find(".errorHint").remove();
+            clearInputBorder("ConPossword");
+            $("#ConPossword").parent().find(".errorHint").remove();
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8"><style type="text/css">[v-cloak] {
+            display: none;
+        }</style>
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5shiv.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.8/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
+<link rel="stylesheet" href="lib/layui/css/layui.css" media="all"/>
+<!--[if IE 6]>
+<script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<style>
+	.col-sm-3{
+		width: 18%;
+	}
+</style>
+<![endif]-->
+<title>发布咨讯</title>
+<meta name="keywords" content="">
+	<meta name="description" content="">
+</head>
+<body>
+<article class="page-container" id="app" v-cloak>
+		<form method="post" class="form form-horizontal" id="form-member-add" ><!--onsubmit="valiType()"-->
+		<div class="row cl" style="margin-right: 40px;">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>咨询名称：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="" id="title" name="title" v-model="title">
+			</div>
+		</div>
+		<div class="row cl" style="margin-right: 40px;">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>资讯来源：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<select id="source" class="select" name="source" v-model="source">
+					<option value="" disabled>空</option>
+					<option value="1">平台</option>
+					<option value="2">代理</option>
+				</select>
+			</div>
+		</div>
+		<div class="row cl" style="margin-right: 40px;" v-if="type != 2">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>资讯配图：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input class="input-text" type="text" name="photo" id="photo" readonly="readonly" v-model="photo">
+				<button type="button" class="layui-btn layui-btn-normal" id="test1">
+					<i class="layui-icon">&#xe67c;</i>上传图片
+				</button>
+			</div>
+		</div>
+		<div class="row cl" style="margin-right: 40px;">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>资讯摘要：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="" id="summary" name="summary" v-model="summary">
+			</div>
+		</div>
+		<div class="row cl" style="margin-right: 40px;">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>资讯了类型：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<select id="type" class="select" name="type" v-model="type">
+					<option value="" disabled>空</option>
+					<option value="1">新闻</option>
+					<option value="2">专题</option>
+				</select>
+			</div>
+		</div>
+		<div class="row cl" style="margin-right: 40px;">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>是否置顶：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<div class="radio-box">
+					<div class="radio-box">
+						<input type="radio" id="radio-3" name="demo-radio1" value="1" v-model="set_top">
+						<label for="radio-3" class="label label-success radius">置顶</label>
+					</div>
+					<div class="radio-box">
+						<input type="radio" id="radio-2" name="demo-radio1" value="2" v-model="set_top">
+						<label for="radio-2" class="label label-default radius">不置顶</label>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row cl" style="margin-right: 40px;">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>资讯内容：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<!-- 加载编辑器的容器 -->
+				<div id="editor">
+					<p>欢迎使用 <b>wangEditor</b> 富文本编辑器</p>
+				</div>
+			</div>
+		</div>
+		<div class="row cl" style="margin-right: 40px;">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+				<button class="btn btn-primary radius" type="button" id="btn1">HTML</button>
+				<button class="btn btn-primary radius" type="button" id="btn2">text</button>
+				<button class="btn btn-primary radius" type="button" id="btn3">json</button>
+			</div>
+		</div>
+		<div class="row cl" style="margin-right: 40px;">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+				<button class="btn btn-primary radius" type="submit">提交</button>
+			</div>
+		</div>
+	</form>
+</article>
+
+<!--_footer 作为公共模版分离出去--> 
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script> 
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<script type="text/javascript" src="lib/layui/layui.all.js"></script>
+<script type="text/javascript" src="lib/vue.min.js"></script>
+<script type="text/javascript" src="lib/request.js"></script>
+<!-- 编辑器源码文件 -->
+<script type="text/javascript" src="lib/release/wangEditor.js"></script>
+<script type="text/javascript">
+	var vue = new Vue({
+        el: '#app',
+        data: {
+        	id:'',
+            title:'',
+            photo:'',
+            summary:'',
+            source:'',
+            type:'',
+            attachment:'',
+            set_top:'',
+            is_visible:'',
+            create_by:'',
+            create_at:'',
+			modify_by:'',
+            modify_at:'',
+            remark:''
+        }
+    });
+
+    var E = window.wangEditor
+    var editor = new E('#editor')
+    // 或者 var editor = new E( document.getElementById('editor') )
+    editor.customConfig.debug = true;
+    editor.customConfig.uploadImgShowBase64 = true   // 使用 base64 保存图片
+    // 配置服务器端地址
+    editor.customConfig.uploadImgServer = 'http://192.168.40.48:9004/ceshi';  // 上传图片到服务器
+    editor.create();
+    $("#btn1").click(function () {
+        alert(editor.txt.html())
+    });
+	$("#btn2").click(function () {
+		alert(editor.txt.text())
+    })
+</script> 
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>

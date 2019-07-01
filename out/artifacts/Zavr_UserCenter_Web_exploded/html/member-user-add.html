@@ -1,0 +1,317 @@
+<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8"><style type="text/css">[v-cloak] {
+            display: none;
+        }</style>
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<link rel="Bookmark" href="/favicon.ico" >
+<link rel="Shortcut Icon" href="/favicon.ico" />
+<link rel="stylesheet" type="text/css" href="lib/jquery.searchableSelect/jquery.searchableSelect.css"/>
+<!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5shiv.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.8/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
+<!--[if IE 6]>
+<script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<!--/meta 作为公共模版分离出去-->
+<style>
+	.col-sm-3{
+		width: 18%;
+	}
+</style>
+<title>添加用户</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+</head>
+<body>
+<article class="page-container" id="app" v-cloak>
+	<form action="" method="post" class="form form-horizontal" id="form-member-add">
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>企业名称：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<!--<input type="text" class="input-text" v-model="eid" placeholder="" id="eid" name="eid">-->
+                <select id="keyname" class="keyname">
+
+                </select>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>员工姓名：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" placeholder="" id="name" name="name" v-model="name">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>员工性别 ：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="radio" carousel-item="input-radio" placeholder="" id="gender1" value="1" name="gender" class="gender">男
+				<input type="radio" carousel-item="input-radio" placeholder="" id="gender" value="2" name="gender" class="gender" checked>女
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>员工类型：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="radio" carousel-item="input-radio" placeholder="" id="type1" value="1" name="type" class="type" checked>管理员
+				<input type="radio" carousel-item="input-radio" placeholder="" id="type" value="2" name="type" class="type">普通员工
+			</div>
+		</div>
+		<div class="row cl" v-if="typestatus">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>初始密码：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="password" class="input-text" value="" placeholder="" id="password" name="password" v-model="password">
+			</div>
+		</div>
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+				<input class="btn btn-primary radius" type="submit" value=" 提交 " id="tijiao"><!--onclick="updateEnterprises()" -->
+			</div>
+		</div>
+	</form>
+</article>
+
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/jquery.searchableSelect/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="lib/jquery.searchableSelect/jquery.searchableSelect.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script> 
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本--> 
+<script type="text/javascript" src="lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.js"></script> 
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script> 
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<script type="text/javascript" src="lib/layui/layui.all.js"></script>
+<script type="text/javascript" src="lib/vue.min.js"></script>
+<script type="text/javascript" src="lib/request.js"></script>
+<script type="text/javascript">
+    var vue = new Vue({
+        el: '#app',
+        data: {
+            info:'',
+			date:[],
+            eid:'',
+			name:'',
+            password:'',
+			typestatus:false,
+            gender:'',
+			type:''
+        }
+    });
+// $(document).ready(function(){
+	// $("#tijiao").mouseover(function(){layer.msg('请确保信息已填写且格式无误');
+     //    layui.use(['laydate', 'laypage', 'layer', 'table', 'carousel', 'upload', 'element'], function() {
+     //        var layer = layui.layer;
+     //        //向世界问个好
+    //
+     //    });
+	// });
+	// $("tijiao").mouseout(function(){
+    //
+	// });
+// });
+    function getKeyName(){
+        $.ajax({
+            type: "post",
+            url: EnterprisegetKeyName,
+            dataType: "json",
+            success: function(data){
+                console.log(JSON.stringify(data.Data));
+                var optionAdd = "";
+                for(var js2 in data.List){
+                    optionAdd = optionAdd + "<option value='"+data.List[js2].id+"' v-model='aid'>"+data.List[js2].name+"</option>";
+                }
+                $("#keyname").empty();
+                $("#keyname").append(optionAdd);
+                if(vue.typestatus){
+                    $('.keyname').searchableSelect();
+                }
+            },error:function(err){
+                layer.msg('程序异常，错误代码'+JSON.stringify(err));
+                // alert(JSON.parse(err));
+            }
+        });
+    }
+$(function(){
+    vue.info = UrlParam.paramValues("param");
+    if(UrlParam.paramValues("type")!=undefined){
+        vue.typestatus = true;
+	}
+
+    if(vue.info!=undefined){
+        vue.eid=UrlParam.paramValues("eid");
+        GetEnterpriseUserInfo();
+	}
+    getKeyName();
+	$('.skin-minimal input').iCheck({
+		checkboxClass: 'icheckbox-blue',
+		radioClass: 'iradio-blue',
+		increaseArea: '20%'
+	});
+	
+	$("#form-member-add").validate({
+		rules:{
+			name:{
+				required:true,
+				minlength:2,
+				maxlength:16
+			},
+            eid:{
+				required:true,
+                isDigits:true,
+			},
+            password:{
+                required:true,
+                minlength:6,
+                maxlength:20,
+			},
+		},
+		onkeyup:false,
+		focusCleanup:true,
+		success:"valid",
+		submitHandler:function(form){
+			$(form).ajaxSubmit();
+			var index = parent.layer.getFrameIndex(window.name);
+			if(vue.typestatus){//新增
+                addEnterpriseUserInfo();
+                // if(addEnterpriseUserInfo()){
+					// parent.$('.btn-refresh').click();
+					// parent.layer.close(index);
+                // };
+			}else{//修改
+                updateEnterprisesUser();
+                // if(updateEnterprisesUser()){
+                //     parent.$('.btn-refresh').click();
+                //     parent.layer.close(index);
+                // };
+			}
+		}
+	});
+});
+
+
+function GetEnterpriseUserInfo() {
+    var param = "{\"UID\":"+vue.info+",\"EID\":"+vue.eid+"}";
+    $.ajax({
+        type: "post",
+        url: GetEnterpriseUser,
+        data: {param:param},
+        dataType: "json",
+        success: function(data){
+            console.log(JSON.stringify(data.Data));
+            vue.name=data.Data.name;//企业名称
+            vue.eid=data.Data.eid;
+            vue.gender=data.Data.gender;
+            vue.type=data.Data.type;
+            $(":radio[name='gender'][value='" + vue.gender + "']").prop("checked", "checked");
+            $(":radio[name='type'][value='" + vue.type + "']").prop("checked", "checked");
+
+            $('#keyname').val(vue.eid);
+            $('#keyname').change();
+            $('#keyname').searchableSelect();
+            // JSON.stringify()
+        },error:function(err){
+            layer.msg('程序异常，错误代码'+JSON.stringify(err));
+            // alert(JSON.parse(err));
+        }
+    });
+}
+
+function valiType() {
+	if(vue.typestatus){
+        updateEnterprisesUser();
+	}else{
+        addEnterpriseUserInfo();
+	}
+}
+// 新增企业
+function addEnterpriseUserInfo() {
+    // var options1=$(".gender option:selected"); //获取选中的项
+    // vue.gender=options1.text();//拿到选中项的值
+    // alert(options.text()); //拿到选中项的文本
+    vue.type=$("input[name='type']:checked").val();
+    vue.gender=$("input[name='gender']:checked").val();
+    var eid=$("#keyname option:selected"); //获取选中的项
+    vue.eid=eid.val();//拿到选中项的值
+    var param = "{\"EID\":"+vue.eid+",\"Name\":\""+vue.name+"\",\"Gender\":"+vue.gender+",\"Type\":"+vue.type+",\"Password\":\""+vue.password+"\",\"Op\":\""+getCookie("islogin")+"\"}";
+    $.ajax({
+        type: "post",
+        url: CreateEnterpriseUser,
+        data: {param:param},
+        dataType: "json",
+        success: function(data){
+            // alert(JSON.stringify(data));
+            // console.log(JSON.stringify(data));
+            if(data.Success){
+                alert("成功");
+                var index = parent.layer.getFrameIndex(window.name);
+				parent.$('.btn-refresh').click();
+                window.parent.location.reload();//刷新父页面
+				parent.layer.close(index);
+                return true;
+            }else{
+                layer.msg(data.Message, {icon: 5});
+                return false;
+            }
+        },error:function(err){
+            layer.msg('程序异常，错误代码'+JSON.stringify(err));
+            return false;
+            // alert(JSON.parse(err));
+        }
+    });
+}
+
+//更新信息
+function updateEnterprisesUser() {
+    vue.type=$("input[name='type']:checked").val();
+    vue.gender=$("input[name='gender']:checked").val();
+    var eid=$("#keyname option:selected"); //获取选中的项
+    vue.eid=eid.val();//拿到选中项的值
+    var param = "{\"EID\":"+vue.eid+",\"Name\":\""+vue.name+"\",\"Gender\":"+vue.gender+",\"Type\":"+vue.type+",\"UID\":\""+vue.info+"\",\"Op\":\""+getCookie("islogin")+"\"}";
+    $.ajax({
+        type: "post",
+        url: SetEnterpriseUser,
+        data: {param:param},
+        dataType: "json",
+        success: function(data){
+            // console.log(JSON.stringify(data));
+            // layui.use(['laydate', 'laypage', 'layer', 'table', 'carousel', 'upload', 'element'], function() {
+            //     var layer = layui.layer;
+				// layer.msg('Success');
+            // });
+            if(data.Success){
+                alert("成功");
+                var index = parent.layer.getFrameIndex(window.name);
+                parent.$('.btn-refresh').click();
+                window.parent.location.reload();//刷新父页面
+                parent.layer.close(index);
+                return true;
+            }else{
+                layer.msg(data.Message, {icon: 5});
+                return false;
+            }
+        },error:function(err){
+            layer.msg('程序异常，错误代码'+JSON.stringify(err));
+            return false;
+            // alert(JSON.parse(err));
+        }
+    });
+
+}
+
+</script> 
+</body>
+</html>

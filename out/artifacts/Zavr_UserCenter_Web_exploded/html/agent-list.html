@@ -1,0 +1,536 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8"><style type="text/css">[v-cloak] {
+            display: none;
+        }</style>
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<link rel="Bookmark" href="/favicon.ico" >
+<link rel="Shortcut Icon" href="/favicon.ico" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5shiv.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+<![endif]-->
+	<link rel="stylesheet" type="text/css" href="lib/layui/css/layui.css"/>
+	<link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+	<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+	<link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.8/iconfont.css" />
+	<link rel="stylesheet" type="text/css" href="lib/layer/2.4/skin/layer.css" />
+	<link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin" />
+	<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
+<!--[if IE 6]>
+<script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<title>会员列表</title>
+</head>
+<body>
+<div id="app" v-cloak>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 会员管理 <span class="c-gray en">&gt;</span> 会员列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+	<div class="text-c" style="text-align: left;">
+		会员名称：
+		<input type="text" class="input-text" style="width:120px" placeholder="输入会员名称" name="name" id="name" v-model="name">
+		到期时间：
+		<input type="text" class="layui-input" style="width:120px;display: inline-block;" placeholder="请选择到期时间" name="linkman" id="linkman" readonly="readonly">
+		会员类型：
+        <select id="type" class="select" v-model="type" style="width:120px">
+        	<option value="" selected="selected">不限</option>
+			<option value="1">企业</option>
+			<option value="2">个人</option>
+		</select>
+		会员等级：
+        <select id="level" class="select" v-model="level" style="width:120px">
+			<option value="" selected="selected">不限</option>
+			<option :value="r.id" v-for="r in Roles">{{r.role_name}}</option>
+		</select>
+		会员状态：
+        <select id="status" class="select" v-model="status" style="width:120px">
+        	<option value="" selected="selected">不限</option>
+			<option value="2">启用</option>
+			<option value="3">禁用</option>
+		</select>
+		托管空间状态：
+		<select id="hostingStatus" class="select" v-model="hostingStatus" style="width:120px">
+			<option value="" selected="selected">不限</option>
+			<option value="1">未超出</option>
+			<option value="2">已超出</option>
+		</select>
+		<button type="button" class="btn btn-success radius" @click="AgentQueryList(1)" style="margin-left: 30px;"><i class="Hui-iconfont">&#xe665;</i> 查询</button>
+        <button type="button" class="btn btn-primary radius" onclick="Empty()" style="margin-left: 20px;"><i class="Hui-iconfont">&#xe72a;</i> 清空</button>
+    </div>
+	<div class="cl pd-5 bg-1 bk-gray mt-20">
+		<span class="l">
+			<a href="javascript:;" @click="agent_add('添加会员','agent-add.html')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加会员</a></span>
+		<span class="r">
+			总记录数：<strong>{{listInfo.RecordCount}}</strong> 条
+		</span>
+		<span class="r">
+			总页数：<strong>{{listInfo.PageCount}}</strong> 页，
+		</span>
+		<span class="r">
+			当前页：<strong>{{listInfo.PageIndex}}</strong> 页，
+		</span>
+	</div>
+
+	<table class="table table-border table-bordered table-hover table-bg table-sort" style="width:100%;white-space: nowrap;text-overflow: ellipsis;overflow: hidden">
+		<thead>
+			<tr class="text-c">
+				<th >编号</th>
+				<th >会员全称</th>
+				<th >会员简称</th>
+				<th >会员类型</th>
+				<th >会员等级</th>
+				<th >到期时间</th>
+				<th >联系人</th>
+				<th >联系方式</th>
+				<th >会员状态</th>
+				<th >已用托管空间(M)</th>
+				<th >托管空间状态</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr class="text-c" v-for="c in listInfo.List" id="mydel">
+				<td>{{c.id}}</td>
+				<td>{{c.name}}</td>
+				<td>{{c.simplename}}</td>
+				<td v-if="c.type==1">企业</td>
+				<td v-else-if="c.type==2">个人</td>
+				<td v-else></td>
+				<td>{{c.level}}</td>
+				<td>{{c.expire_date}}</td>
+				<td>{{c.linkman}}</td>
+				<td>{{c.linkmobilephone}}</td>
+				<td v-if="c.status==2"><span class="label label-success radius">已启用</span></td>
+				<td v-else-if="c.status==3"><span class="label label-warning radius">已禁用</span></td>
+				<td v-else></td>
+				<td>{{c.hosting/1024 | numFilter}}</td>
+				<td v-if="c.hostingStatus==1"><span class="label label-success radius">未超出</span></td>
+				<td v-else-if="c.hostingStatus==2"><span class="label label-warning radius">已超出</span></td>
+				<td v-else></td>
+				<td class="td-manage">
+					<a v-if="c.status==2" @Click="admin_stop(this,c.id,c.status)" href="javascript:;" title="停用" style="text-decoration:none"><i class="Hui-iconfont">&#xe631;</i></a>
+					<a v-if="c.status==3" @Click="admin_start(this,c.id,c.status)" href="javascript:;" title="启用" style="text-decoration:none"><i class="Hui-iconfont">&#xe615;</i></a>&nbsp;&nbsp;
+					<a title="编辑" href="javascript:;" @click="member_edit('编辑会员信息','agent-add.html',c.id)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe60c;</i></a>&nbsp;&nbsp;
+					<a title="续费" href="javascript:;" @click="Payment('会员续费',c.id)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe628;</i></a>&nbsp;&nbsp;
+					<a @Click="Reset_pwd(c.id,c.simplename)" href="javascript:;" title="重置密码" style="text-decoration:none"><i class="Hui-iconfont">&#xe63f;</i></a>&nbsp;&nbsp;
+					<a @click="agent_details('会员详情','agent-details.html',c.id)" href="javascript:;" title="详情" style="text-decoration:none"><i class="Hui-iconfont">&#xe720;</i></a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<div class="pagination" style="float: right">
+		<button class="btn btn-success" type="button" @click="AgentQueryList(1)">首页</button>
+		<button class="btn btn-success" type="button" @click="AgentQueryList(listInfo.PageIndex-1)">上一页</button>
+		<button class="btn btn-success" type="button" @click="AgentQueryList(listInfo.PageIndex+1)">下一页</button>
+		<button class="btn btn-success" type="button" @click="AgentQueryList(listInfo.PageCount)">尾页</button>
+		<input type="number" style="color: #0C0C0C;width: 50px" v-model="tiaozhuan"/>
+        <button class="btn btn-success" type="button" @click="AgentQueryList(tiaozhuan)">跳转</button>
+	</div>
+	<div style="display: none;padding-top: 40px;" id="xufei">
+		<span style="margin-left: 40px;;">开通时长：</span>
+		<div style="display: inline-block;margin-left:20px;" >
+			<input type="radio" id="radio-1" name="radio1" value="1" v-model="OpeningTime" @click="open_datetime(1)">
+		    <label for="radio-1">一年</label>
+		</div>
+		<div style="margin-left: 40px;display:inline-block"  >
+			<input type="radio" id="radio-2" name="radio1" value="2" v-model="OpeningTime" @click="open_datetime(2)">
+		    <label for="radio-2">二年</label>
+		</div>
+		<div style="margin-left: 40px;display:inline-block"  >
+			<input type="radio" id="radio-3" name="radio1" value="3" v-model="OpeningTime" @click="open_datetime(3)">
+		    <label for="radio-3">三年</label>
+		</div>
+		<div class="formControls" style="width: 100%;margin-top:20px;">
+			<span style="margin-left: 40px;;">到期时间：</span>
+			<input class="input-text" type="text" disabled="disabled" style="margin-left:20px;width: 50%;" v-model="Expire_Date">
+		</div>
+	</div>
+</div>
+</div>
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script> 
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="lib/My97DatePicker/4.8/WdatePicker.js"></script> 
+<script type="text/javascript" src="lib/datatables/1.10.0/jquery.dataTables.min.js"></script> 
+<script type="text/javascript" src="lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="lib/layui/layui.js"></script>
+<script type="text/javascript" src="lib/vue.min.js"></script>
+<script type="text/javascript" src="lib/request.js"></script>
+<script type="text/javascript">
+    // 创建一个 Vue 实例或 "ViewModel"
+    // 它连接 View 与 Model
+    var vue = new Vue({
+        el: '#app',
+        data: {
+            listInfo:[],
+            id:'',
+            name:'',
+            simplename:'',
+            linkman:'',
+            province:'',
+            city:'',
+            region:'',
+            status:'',
+            level:'',
+            businessLicense:'',
+            vrNumber:'',
+            type:'',
+            ExpireDate:'',
+            tiaozhuan:1,
+            OpeningTime:'',
+            Expire_Date:'',
+            Ex_Da:[],
+            Roles:[],
+            hostingStatus:''
+        },
+        filters: {
+            numFilter(value) {
+                // 截取当前数据到小数点后两位
+                let realVal = Number(value).toFixed(3)
+                // num.toFixed(2)获取的是字符串
+                return Number(realVal)
+            }
+        }
+    });
+    
+    let myDate = new Date();
+    let today = new Date();
+    
+    layui.use('laydate', function(){
+		var laydate = layui.laydate;		  
+		//执行一个laydate实例
+		laydate.render({
+			elem: '#linkman',//指定元素
+			done: function(value, date, endDate){
+			    vue.ExpireDate = value
+			}
+		});
+	});
+    //会员信息分页列表
+    function AgentQueryList(index) {
+        if(index>vue.listInfo.PageCount){
+            layui.use(['laydate', 'laypage', 'layer', 'table', 'carousel', 'upload', 'element'], function() {
+                var layer = layui.layer;
+                //向世界问个好
+                layer.msg('已经是最后一页');
+            });
+            // index = vue.listInfo.PageCount;
+            return;
+        }
+        if(index<1){
+            index = 1;
+            layui.use(['laydate', 'laypage', 'layer', 'table', 'carousel', 'upload', 'element'], function() {
+                var layer = layui.layer;
+                //向世界问个好
+                layer.msg('已经是第一页');
+            });
+            return;
+        }
+   		
+        var param = "{\"PageIndex\":"+index+",\"PageSize\":15,\"Query\":{\"Name\":\""+vue.name+"\",\"ExpireDate\":\""+vue.ExpireDate+
+        			"\",\"Type\":\""+vue.type+"\",\"SimpleName\":\""+vue.simplename+"\",\"Province\":\""+vue.province+"\",\"City\":\""+
+        			vue.city+"\",\"Region\":\""+vue.region+"\",\"Status\":\""+vue.status+"\",\"Level\":\""+vue.level+"\",\"HostingStatus\":\""+
+					vue.hostingStatus+"\"}}";
+        $.ajax({
+            type: "post",
+            url: QueryAgents,
+            data: {parameter:param},
+            dataType: "json",
+            success: function(data){
+             	if(data.RecordCount==0){
+                    vue.listInfo = [];
+             		layer.msg("没有相关数据",{icon:5,time:3000})
+              	}else{
+                	vue.listInfo = data;
+              	}
+            },error:function(err){
+            }
+        });
+    }
+    $(function(){
+        Roles();
+        AgentQueryList(1);
+        $('.table-bg').dataTable({
+            "aaSorting": [[ 1, "desc" ]],//默认第几个排序
+            "paging": false, // 禁止分页
+            "bStateSave": true,//状态保存
+            "bFilter": false,//不显示搜索
+            "bLengthChange": false,//不显示每页显示条数选项
+            // "aoColumnDefs": [
+            //   // {"bVisible": false, "aTargets": [ 3 ]}, //控制列的隐藏显示
+            //   {"orderable":false,"aTargets":[1]}// 制定列不参与排序
+            // ],
+            "ordering": false, // 禁止排序
+            "language": {
+                "info": ""// 表格左下角显示的文字
+            }
+        }).fnAddData(vue.listInfo,true);
+        $(".odd").remove();
+    });
+/*会员-增加*/
+function agent_add(title,url){
+	layer.open({
+		type: 2,
+		title:title,
+		area: ['1000px', '800px'],
+		fixed: true,
+        maxmin:true,
+		content: url,
+		resize:false,
+		cancel:function(){
+			AgentQueryList(vue.listInfo.PageIndex)
+		}
+	})
+}
+/*tupian-详情*/
+function agent_img(path){
+	var img = "<img  class='mine-tu' src='"+path+"' style='width: 400px;height: 400px;'>";
+	layer.open({
+	  type: 1,
+	  title: false,
+	  closeBtn: 0,
+	  shadeClose: true,
+	  skin: 'layui-layer-nobg', //没有背景色
+	  move:'.mine-tu',
+	  content: img
+	});
+}
+/*会员-详情*/
+function agent_details(title,url,id){
+	if(id!=''){
+		url = url+"?ID="+id;
+		layer.open({
+			type: 2,
+			title:title,
+			area: ['800px', '800px'],
+            scrollbar: false,
+			fixed: true,
+            maxmin:true,
+			content: url
+		})
+	}
+}
+
+/*管理员-编辑*/
+function member_edit(title,url,id){
+	if(id!=''){
+		url = url+"?ID="+id;
+		layer.open({
+			type:2,
+			title:title,
+			area: ['900px','700px'],
+            maxmin:true,
+            resize:true,
+            content: url,
+			cancel:function(){
+				AgentQueryList(vue.listInfo.PageIndex)
+			}
+		})
+	}
+}
+/*会员-停用*/
+function admin_stop(obj,id,status){
+	status=3;
+	var parameter="{\"ID\":\""+id+"\",\"Status\":\""+status+"\"}";
+	layer.confirm("禁用后，该会员将无法登陆。确定要禁用该会员么？",{
+		btn: ['确认','取消'] //按钮
+	},function(){
+		//此处请求后台程序，下方是成功后的前台处理……
+		$.ajax({
+			type:"post",
+			url: SetAgentState,
+			data:{parameter:parameter},
+			dataType:'json',
+			success: function(data){
+				if(data.Success){
+					$(obj).parents("tr").find(".td-manage").prepend('<a v-if="c.status==3" @Click="admin_start(this,c.id,c.status)" href="javascript:;" title="启用" style="text-decoration:none"><i class="Hui-iconfont">&#xe615;</i></a>');
+					$(obj).parents("tr").find(".td-status").html('<span class="label label-default radius">已禁用</span>');
+					$(obj).remove();
+					layer.msg('已停用!',{icon: 1,time:1000},function(){
+						AgentQueryList(vue.listInfo.PageIndex);
+					});
+				}else{
+					layer.msg(data.Message,{icon: 5,time:1000},function(){
+						AgentQueryList(vue.listInfo.PageIndex);
+					});
+				}
+			},
+            error:function(err) {
+			},
+		});
+	});
+}
+
+/*会员-启用*/
+function admin_start(obj,id){
+	status=2;
+	var parameter="{\"ID\":\""+id+"\",\"Status\":\""+status+"\"}";
+	layer.confirm("确认要启用吗?",{
+		btn: ['确认','取消'] //按钮
+	},function(){
+		//此处请求后台程序，下方是成功后的前台处理……
+		$.ajax({
+			type:"post",
+			url: SetAgentState,
+			data:{parameter:parameter},
+			dataType:'json',
+			success: function(data){
+				if(data.Success){
+					$(obj).parents("tr").find(".td-manage").prepend('<a v-if="c.status==2" @Click="admin_stop(this,c.id,c.status)" href="javascript:;" title="停用" style="text-decoration:none"><i class="Hui-iconfont">&#xe631;</i></a>');
+					$(obj).parents("tr").find(".td-status").html('<span class="label label-default radius">已禁用</span>');
+					$(obj).remove();
+					layer.msg('已启用!',{icon: 1,time:1000},function(){
+						AgentQueryList(vue.listInfo.PageIndex);
+					});
+				}else{
+					layer.msg(data.Message,{icon: 5,time:1000},function(){
+						AgentQueryList(vue.listInfo.PageIndex);
+					});
+				}
+			},
+            error:function(err){
+			},
+		});
+	});
+}
+/*重置密码*/
+function Reset_pwd(id,agentname){
+    layer.confirm("是否将会员“"+agentname+"”密码重置为“abcd1234”，重置成功后请及时通知用户登录修改登录密码。",{
+        btn: ['确认','取消'] //按钮
+    },function(){
+        //此处请求后台程序，下方是成功后的前台处理……
+        var param = "{\"ID\":\""+id+"\"}";
+        $.ajax({
+            type:"post",
+            url: AgentResetPassword,
+            data:{parameter:param},
+            dataType:'json',
+            success: function(data){
+                if(data.Success){
+                    layer.msg("密码重置成功，初始密码为abcd1234,请立即通知用户修改密码",{icon:1,time:3000})
+                }else{
+                    layer.msg(data.Message,{icon: 2,time:1000});
+                }
+            },
+            error:function(err) {
+            },
+        });
+    });
+}
+
+/*搜索栏清空*/
+function Empty(){
+	vue.name = '';
+	vue.linkman = '';
+	vue.type = '';
+	vue.status = '';
+	vue.level = '';
+	vue.ExpireDate = '';
+	$("#linkman").val('');
+	AgentQueryList(1);
+}
+/*续费弹窗*/
+function Payment(titl, id) {
+	vue.Expire_Date='';
+	var param = "{\"ID\":\""+id+"\"}";
+	let islogin = JSON.parse($.cookie("islogin"));
+	$.ajax({
+		type: "post",
+		url: GetAgentByKey,
+		data: {parameter: param},
+		dataType: "json",
+		success: function(data) {
+			if(data.Success==true){
+				if(data.Data.expire_date!=null){
+					let arry = data.Data.expire_date.split("-");
+					vue.Ex_Da = [parseInt(arry[0]), parseInt(arry[1]) - 1, parseInt(arry[2])];
+					myDate.setFullYear(vue.Ex_Da[0], vue.Ex_Da[1], vue.Ex_Da[2]);
+//					let time = myDate.getFullYear() + '-' + (myDate.getMonth() + 1) + '-' + myDate.getDate();
+//					vue.Expire_Date = time;
+				}else{
+					myDate = new Date();
+					vue.Ex_Da = [myDate.getFullYear(), myDate.getMonth(), myDate.getDate()];
+					vue.Expire_Date='';
+				}
+			}
+		},error: function(err) {
+		}
+	});
+	layer.open({
+		type: 1,
+		title: titl,
+		area: ['400px', '250px'],
+		btn: ['确认', '取消'],
+		content: $('#xufei'),
+		yes:function(index, layero){
+			layer.confirm('确认为该会员续费吗？', {
+			    btn: ['是的', '取消']
+			},function(){
+				param = "{\"ID\":\""+id+"\",\"Pid\":\""+islogin.Data.id+"\",\"OpeningTime\":\""+vue.OpeningTime+"\"}";
+		    	$.ajax({
+		        	type: 'post',
+		            url: setPayment,
+		            data: {parameter: param},
+		            dataType:"json",
+		            success: function(data){
+		        	    if(data.Success){
+		                    layer.msg("续费成功", {icon:6,time:1000},function(){
+		                    	AgentQueryList(vue.listInfo.PageIndex);
+		                    	layer.closeAll();
+		                    });
+		                }else{
+		                    layer.msg("续费失败", {icon: 5});
+		                }
+		            },error:function(err){
+		            }
+		        })
+			})
+		},end:function(){
+			vue.OpeningTime='';
+		}
+	})
+}
+/*编辑到期时间*/
+function open_datetime(year){
+	if(myDate>today){
+		myDate.setFullYear(vue.Ex_Da[0]+year,vue.Ex_Da[1],vue.Ex_Da[2]);
+		let time = myDate.getFullYear() + '-' + (myDate.getMonth() + 1) + '-' + myDate.getDate();
+		vue.Expire_Date = time;
+	}else{
+		myDate = new Date();
+		myDate.setFullYear(myDate.getFullYear()+year,myDate.getMonth(),myDate.getDate());
+		let time = myDate.getFullYear() + '-' + (myDate.getMonth() + 1) + '-' + myDate.getDate();
+		vue.Expire_Date = time;
+	}
+}
+
+/*角色列表*/
+  function Roles(){
+  	$.ajax({
+    	type: 'post',
+        url: selectRoles,
+        cache: false,
+        processData: false,
+        contentType: false,
+        dataType:"json",
+        success: function(data){
+    	    if(data.Success){
+                vue.Roles = data.List;
+            }
+        },error:function(err){
+        }
+    });
+  }
+</script>
+</body>
+</html>
