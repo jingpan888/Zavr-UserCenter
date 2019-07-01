@@ -1,0 +1,252 @@
+<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8"><style type="text/css">[v-cloak] {
+            display: none;
+        }</style>
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <link rel="Bookmark" href="/favicon.ico">
+    <link rel="Shortcut Icon" href="/favicon.ico"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5shiv.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.8/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/layer/2.4/skin/layer.css"/>
+    <!--[if IE 6]>
+    <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <!--/meta 作为公共模版分离出去-->
+
+    <title>添加部门</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <style>
+        .col-sm-3 {
+            width: 18%;
+        }
+
+        .layui-colla-title {
+            padding: 0 0 0 5px;
+            color: #000;
+            background-color: transparent;
+        }
+
+        .layui-badge-rim, .layui-colla-content, .layui-colla-item, .layui-collapse, .layui-elem-field, .layui-form-pane .layui-form-item[pane], .layui-form-pane .layui-form-label, .layui-input, .layui-layedit, .layui-layedit-tool, .layui-quote-nm, .layui-select, .layui-tab-bar, .layui-tab-card, .layui-tab-title, .layui-tab-title .layui-this:after, .layui-textarea {
+            border: none;
+        }
+
+        .layui-colla-icon {
+            display: none;
+        }
+
+        dd .layui-colla-title {
+            height: 36px;
+            line-height: 36px;
+            color: #333;
+        }
+
+        .layui-colla-content {
+            padding: 0 15px;
+        }
+
+        .layui-colla-item {
+            cursor: pointer;
+        }
+
+        dl {
+            display: none;
+        }
+
+        dd div {
+            display: none;
+        }
+    </style>
+</head>
+<body onload="departmentID">
+<article class="page-container" id="app" v-cloak>
+    <form action="" method="post" class="form form-horizontal" id="form-member-add">
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>部门：</label>
+            <div class="formControls col-xs-8 col-sm-9" style="width: 250px">
+                <select id="depart" name="depart" style="width: 221px;height:30px">
+                    <option v-for="i in depList" :value="i.id">{{i.departmentName}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>职位：</label>
+            <div class="formControls col-xs-8 col-sm-9" style="width: 250px">
+                <input type="text" class="input-text" value="" placeholder="" id="positionName" name="positionName"
+                       v-model="positionName">
+            </div>
+        </div>
+
+        <tr>
+            <td>
+                权限：
+            </td>
+            <td>
+                <ul class="layui-collapse" style="overflow-y:scroll;height:180px;width: 95%">
+                    <li class="layui-colla-item" v-for="i in carte">
+                        <p class="layui-colla-title">
+                            <input type="checkbox" :value="i.id" name="meunsID">
+                            <label>{{i.name}}</label>
+                        </p>
+                        <dl class="layui-colla-content" v-for="j in i.childList" style="display: block">
+                            <dd class="layui-colla-item">
+                                <p class="layui-colla-title">
+                                    <input type="checkbox" :id="j.id+'sj'" :value="j.id" name="meunsID">
+                                    <label :for="j.id+'sj'">{{j.name}}</label>
+                                </p>
+                                <!--<div class="layui-colla-content">-->
+                                <!--<p>-->
+                                <!--<input type="checkbox" id="sjpz">-->
+                                <!--<label for="sjpz">数据配置</label>-->
+                                <!--</p>-->
+                                <!--<p>-->
+                                <!--<input type="checkbox" id="sjbf">-->
+                                <!--<label for="sjbf">数据备份</label>-->
+                                <!--</p>-->
+                                <!--</div>-->
+                            </dd>
+                        </dl>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+        <div class="row cl">
+            <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+                <input class="btn btn-primary radius" type="button" value="提交"
+                       onclick="addPositionName()">
+                <input class="btn btn-default radius" type="button" value="取消"
+                       onclick="layer_close()">
+            </div>
+        </div>
+    </form>
+</article>
+
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<script type="text/javascript" src="lib/layui/layui.all.js"></script>
+<script type="text/javascript" src="lib/vue.min.js"></script>
+<script type="text/javascript" src="lib/request.js"></script>
+<script type="text/javascript">
+    var vue = new Vue({
+        el: '#app',
+        data: {
+            ListInfo: '',
+            id: '',
+            positionName: '',//部门名称
+            depList: [], //部门信息
+            carte:[] //菜单
+        }, updated: function () {
+            $("input:checkbox[name=meunsID]").click(function () {
+                if ($(this).is(':checked')) {
+                    $(this).parent().parent().find("input:checkbox[name=meunsID]").prop("checked", true);
+
+                    var parentMenu = $(this).parents("dl").prevAll("p").find("input:checkbox[name=meunsID]");
+                    if (!parentMenu.is(':checked')) {
+                        parentMenu.prop("checked", true);
+                    }
+                    // var boxes = $(this).parent().parent().find("input:checkbox[name=meunsID]");
+                    // console.log("boxes.length:"+boxes.length)
+                    // for(i=0;i<boxes.length;i++){
+                    //     $(boxes[i]).prop("checked",true);
+                    // }
+                } else {
+                    $(this).parent().parent().find("input:checkbox[name=meunsID]").attr("checked", false);
+                    var prevMenus = $(this).parents("dl").parent().find("dl").find("input:checkbox[name=meunsID]");
+                    var haveCheck = false;
+                    prevMenus.each(function () {
+                        if ($(this).is(':checked')) {
+                            haveCheck = true;
+                        }
+                    });
+                    if (!haveCheck) {
+                        var parentMenu = $(this).parents("dl").prevAll("p").find("input:checkbox[name=meunsID]");
+                        parentMenu.prop("checked", false);
+                    }
+                }
+            });
+        }
+    });
+    //查询部门信息
+    window.onload = function () {
+        $.ajax({
+            type: "post",
+            url: SearchPlatDepartment,
+            dataType: "json",
+            success: function (data) {
+                vue.depList = data;
+            }
+        });
+    }
+
+    // 新增职位信息
+    function addPositionName() {
+        if (vue.positionName == '' || vue.positionName == null || vue.positionName == undefined) {
+            layer.msg('信息不完整');
+            return;
+        }
+        var depart = $("#depart").val();
+        var menusID = '';
+        $('input:checkbox[name=meunsID]:checked').each(function (i) {
+            if (0 == i) {
+                menusID = $(this).val();
+            } else {
+                menusID += ("," + $(this).val());
+            }
+        });
+        var param = "{\"PositionName\":\"" + vue.positionName + "\",\"DepartmentID\":" + depart + ",\"UserID\":\"" + JSON.parse(getCookie("islogin")).Data.id + "\",\"menuIds\":\"" + menusID + "\"}";
+        $.ajax({
+            type: "post",
+            url: AddPosition,
+            data: {param: param},
+            dataType: "json",
+            success: function (data) {
+                window.parent.location.reload();//刷新父页面
+                layui.use(['laydate', 'laypage', 'layer', 'table', 'carousel', 'upload', 'element'], function () {
+                    var layer = layui.layer;
+                    layer_close();//关闭页面
+                    layer.msg('Success');
+                });
+            }, error: function (err) {
+                layer.msg('程序异常，错误代码' + JSON.stringify(err));
+            }
+        });
+    }
+    $.ajax({
+        type: "post",
+        dataType: "json",
+        url: GetAllMenus,
+        success: function (data) {
+            vue.carte = data.Data.menus;
+            //console.log(JSON.stringify(vue.carte));
+        }
+    });
+    // }
+</script>
+<!--/请在上方写此页面业务相关的脚本-->
+
+</body>
+</html>

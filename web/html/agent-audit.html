@@ -1,0 +1,286 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8"><style type="text/css">[v-cloak] {
+            display: none;
+        }</style>
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5shiv.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.8/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
+<link rel="stylesheet" href="lib/layui/css/layui.css" media="all"/>
+<!--[if IE 6]>
+<script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<style>
+	.col-sm-3{
+		width: 18%;
+	}
+</style>
+<![endif]-->
+<title>代理审核</title>
+<meta name="keywords" content="">
+	<meta name="description" content="">
+</head>
+<body>
+<article class="page-container" id="app" v-cloak>
+		<form method="post" class="form form-horizontal" id="form-member-add" ><!--onsubmit="valiType()"-->
+		<div class="row cl" style="margin-right: 40px;">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>代理名称：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="" id="name" name="name" v-model="name" disabled="disabled">
+			</div>
+		</div>
+		<div class="row cl" style="margin-right: 40px;">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>代理简称：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="" id="simplename" name="simplename" v-model="simplename" disabled="disabled">
+			</div>
+		</div>
+		<div class="row cl" style="margin-right: 40px;">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>代理Logo：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<img width="140px" height="140px" id="logo" @click="tupian(getImg,vue.logo)"/>
+			</div>
+		</div>
+		<div class="row cl" style="margin-right: 40px;">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>代理营业执照：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<img width="500px" height="300px" id="businessLicense" @click="tupian(getBusinessLicense,vue.businessLicense)"/>
+			</div>
+		</div>
+		<div class="row cl" style="margin-right: 40px;">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>申请时间：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="" id="applydatetime" name="applydatetime" v-model="applydatetime" disabled="disabled">
+			</div>
+		</div>
+		<div class="row cl" style="margin-right: 40px;">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>联系人：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="" id="linkman" name="linkman" v-model="linkman" disabled="disabled">
+			</div>
+		</div>
+		<div class="row cl" style="margin-right: 40px;">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>联系人手机：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="" id="linkmobilephone" name="linkmobilephone" v-model="linkmobilephone" disabled="disabled">
+			</div>
+		</div>
+		<div class="row cl" style="margin-right: 40px;">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>联系人座机：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="" id="linktelephone" name="linktelephone" v-model="linktelephone" disabled="disabled">
+			</div>
+		</div>
+		<div class="row cl" style="margin-right: 40px;">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>邮箱：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" placeholder="@" name="email" id="email" v-model="email" disabled="disabled">
+			</div>
+		</div>
+			<div class="row cl" style="margin-right: 40px;">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>省市区：</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<div data-toggle="distpicker">
+						<select id="province" name="province" style="font-size: 14px;background-color: #EEEEEE;" disabled="disabled"></select>
+						<select id="city" name="city" style="font-size: 14px;background-color: #EEEEEE;" disabled="disabled"></select>
+						<select id="region" name="region" style="font-size: 14px;background-color: #EEEEEE;" disabled="disabled"></select>
+					</div>
+				</div>
+			</div>
+		<div class="row cl" style="margin-right: 40px;">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>详细地址：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" placeholder="联系地址" name="address" id="address" v-model="address" disabled="disabled">
+			</div>
+		</div>
+		<div class="row cl" style="margin-right: 40px;">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>审核：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+					<div class="radio-box">
+						<input type="radio" id="radio-1" name="demo-radio1" value="0" v-model="status">
+						<label for="radio-1" class="label label-danger radius">未通过</label>
+					</div>
+					<div class="radio-box">
+						<input type="radio" id="radio-2" name="demo-radio1" value="1" v-model="status">
+						<label for="radio-2" class="label label-default radius">审核中</label>
+					</div>
+					<div class="radio-box">
+						<input type="radio" id="radio-3" name="demo-radio1" value="2" v-model="status">
+						<label for="radio-3" class="label label-success radius">通过</label>
+					</div>
+			</div>
+		</div>
+		<div class="row cl" style="margin-right: 40px;">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+				<input class="btn btn-primary radius" type="button" @click="agent_status(vue.id,vue.status)" value="提交"/>
+			</div>
+		</div>
+	</form>
+</article>
+<!--_footer 作为公共模版分离出去--> 
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script> 
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<script type="text/javascript" src="lib/layui/layui.all.js"></script>
+<script type="text/javascript" src="lib/vue.min.js"></script>
+<script type="text/javascript" src="lib/request.js"></script>
+<script type="text/javascript">
+    var vue = new Vue({
+        el: '#app',
+        data: {
+        	id:'',
+            name:'',
+            simplename:'',
+            applydatetime:'',
+            province:'',
+            status:'',
+            linkman:'',
+            linkmobilephone:'',
+            linktelephone:'',
+            email:'',
+            province:'',
+			city:'',
+            region:'',
+            address:'',
+            level:'',
+            logo:'',
+            businessLicense:'',
+            vrNumber:''
+        }
+    });
+
+       $(document).ready(function(){
+           $("#tijiao").mouseover(function(){layer.msg('请确保信息已填写且格式无误');
+               layui.use(['laydate', 'laypage', 'layer', 'table', 'carousel', 'upload', 'element'], function() {
+                   var layer = layui.layer;
+                   //向世界问个好
+      
+               });
+          });
+       });
+
+    $(function(){
+        vue.id = UrlParam.paramValues("ID");
+        if(vue.id!=undefined){
+            GetAgentInfo();
+        }
+        $('.skin-minimal input').iCheck({
+            checkboxClass: 'icheckbox-blue',
+            radioClass: 'iradio-blue',
+            increaseArea: '20%'
+        });
+    });
+    function GetAgentInfo() {
+        var param = "{\"ID\":"+vue.id+"}";
+        // console.log(param);
+           $.ajax({
+               type: "post",
+               url: GetAgentByKey,
+               data: {parameter:param},
+               dataType: "json",
+               success: function(data){
+                   console.log(JSON.stringify(data.Data));
+                   vue.name=data.Data.name;
+                   vue.simplename=data.Data.simplename;
+                   vue.applydatetime=data.Data.applydatetime;
+                   vue.province=data.Data.province;
+                   vue.city=data.Data.city;
+                   vue.region=data.Data.region;
+                   vue.address=data.Data.address;
+                   vue.level=data.Data.level;
+                   vue.linkman=data.Data.linkman;
+                   vue.linkmobilephone=data.Data.linkmobilephone;
+                   vue.linktelephone=data.Data.linktelephone;
+                   vue.email=data.Data.email;
+                   vue.status=data.Data.status;
+                   vue.logo=data.Data.logo;
+                   if(data.Data.logo!=''){
+                   	$("#logo").attr('src',getImg+"?imgName="+data.Data.logo);
+                   }
+                   if(data.Data.businessLicense!=''){
+                   	$("#businessLicense").attr('src',getBusinessLicense+"?imgName="+data.Data.businessLicense)
+                   }
+                   vue.businessLicense=data.Data.businessLicense;
+                   //vue.vrNumber=data.Data.vrNumber;
+                   $("#province").val(vue.province);
+                   $("#province").trigger("change");
+                   $("#city").val(vue.city);
+                   $("#city").trigger("change");
+                   $("#region").val(vue.region);
+                   $("#region").trigger("change");
+                   $("#level").val(vue.level);
+               },error:function(err){
+                   layer.msg('程序异常，错误代码'+JSON.stringify(err));
+                   // alert(JSON.parse(err));
+               }
+           });
+    }
+
+    //更新审核状态
+    function agent_status(id,status){
+        var parameter="{'ID':"+id+",'Status':"+status+"}";
+        console.log(parameter);
+        $.ajax({
+			type:"post",
+			url: SetAgentState,
+			data:{parameter:parameter},
+			dataType:'json',
+			success: function(data){
+				console.log(data);
+				if(data.Success){
+					parent.layer.msg('审核完成!',{icon: 1,time:1000});
+				}else{
+					parent.layer.msg('操作失败!!!',{icon: 5,time:1000});
+				}
+			},
+            error:function(err) {
+                layer.msg('异常'+JSON.stringify(err),{icon:5});
+			},
+			complete:function(XHR, TS){
+				var index = parent.layer.getFrameIndex(window.name);
+		        parent.layer.close(index);
+			}
+		});
+    }
+    //图片点击事件
+    function tupian(request,url){
+    	var img = "<img src="+request+"?imgName="+url+">";
+    	console.log(img);
+    	layer.open({  
+		    type: 1,  
+		    shade: false,  
+		    title: '图片查看', 
+		    area: [img.Width+'px', img.height+'px'],
+		    moveOut:true,
+		    zIndex: 2, //重点1
+  			success: function(layero){
+    			layer.setTop(layero); //重点2
+  			},
+		    content: img, //捕获的元素，注意：最好该指定的元素要存放在body最外层，否则可能被其它的相对元素所影响  
+		    cancel: function () {  
+		        //layer.msg('图片查看结束！', { time: 5000, icon: 6 });  
+		    }  
+		}); 
+    }
+</script> 
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>

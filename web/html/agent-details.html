@@ -1,0 +1,246 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8"><style type="text/css">[v-cloak] {
+            display: none;
+        }</style>
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5shiv.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.8/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
+<!--[if IE 6]>
+<script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<style>
+	.col-sm-3{
+		width: 18%;
+	}
+</style>
+<![endif]-->
+<title>会员详情</title>
+<meta name="keywords" content="">
+	<meta name="description" content="">
+</head>
+<body>
+<article class="page-container" id="app" v-cloak>
+	<div class="pd-20">
+	  <table class="table table-border table-bordered table-hover table-bg table-sort table-striped" style="width:100%;white-space: pre-wrap;text-overflow: ellipsis;overflow: hidden">
+	    <tbody>
+	      <tr>
+	        <th class="text-r" style="width: 20%;">会员全称：</th>
+	        <td>{{name}}</td>
+	      </tr>
+	      <tr>
+	        <th class="text-r">会员简称：</th>
+	        <td>{{simplename}}</td>
+	      </tr>
+	      <tr v-if="type != 2">
+	        <th class="text-r">Logo：</th>
+	        <td v-if="logo==''"><span class="label label-warning radius">未上传</span></td>
+	        <td v-else-if="logo!=''"><span class="label label-success radius">已上传</span></td>
+	        <td v-else></td>
+	      </tr>
+	      <tr>
+	        <th class="text-r">营业执照or身份证：</th>
+	        <td v-if="businessLicense==''"><span class="label label-warning radius">未上传</span></td>
+	        <td v-if="businessLicense!=''"><span class="label label-success radius">已上传</span></td>
+	      </tr>
+	      <tr>
+	        <th class="text-r">会员类型：</th>
+	        <td v-if="type==1">企业</td>
+	        <td v-else-if="type==2">个人</td>
+	        <td v-else></td>
+	      </tr>
+	      <tr>
+	        <th class="text-r">可发布VR数量：</th>
+	        <td>{{vrNumber}}</td>
+	      </tr>
+	      <tr>
+	        <th class="text-r">联系人：</th>
+	        <td>{{linkman}}</td>
+	      </tr>
+	      <tr>
+	        <th class="text-r">联系人手机：</th>
+	        <td>{{linkmobilephone}}</td>
+	      </tr>
+	      <tr>
+	        <th class="text-r">联系人座机：</th>
+	        <td>{{linktelephone}}</td>
+	      </tr>
+	      <tr>
+	        <th class="text-r">邮箱：</th>
+	        <td>{{email}}</td>
+	      </tr>
+	      <tr>
+	        <th class="text-r">省市区：</th>
+	        <td>{{province}}{{city}}{{region}}</td>
+	      </tr>
+	      <tr>
+	        <th class="text-r">详细地址：</th>
+	        <td>{{address}}</td>
+	      </tr>
+	      <tr>
+	        <th class="text-r">会员等级：</th>
+	        <td >{{level}}</td>
+	      </tr>
+	      <tr>
+	        <th class="text-r">开通时长：</th>
+	        <td v-if="OpeningTime==1">一年</td>
+	        <td v-else-if="OpeningTime==2">两年</td>
+	        <td v-else-if="OpeningTime==3">三年</td>
+	        <td v-else></td>
+	      </tr>
+	      <tr>
+	        <th class="text-r">到期时间：</th>
+	        <td>{{ExpireDate}}</td>
+	      </tr>
+	      <tr>
+	        <th class="text-r">会员状态：</th>
+	        <td v-if="status==2"><span class="label label-success radius">启用</span></td>
+	        <td v-else-if="status==3"><span class="label label-warning radius">禁用</span></td>
+		    <td v-else></td>
+	      </tr>
+		  <tr>
+			  <th class="text-r">已用托管空间(M)：</th>
+			  <td>{{hosting/1024 | numFilter}}</td>
+		  </tr>
+		  <tr>
+			  <th class="text-r">托管空间状态：</th>
+			  <td v-if="hostingStatus==1"><span class="label label-success radius">未超出</span></td>
+			  <td v-else-if="hostingStatus==2"><span class="label label-warning radius">已超出</span></td>
+			  <td v-else></td>
+		  </tr>
+		  <tr>
+			  <th class="text-r">会员简介：</th>
+			  <td>{{introduction}}</td>
+		  </tr>
+	      <tr>
+	        <th class="text-r">申请时间：</th>
+	        <td>{{applydatetime}}</td>
+	      </tr>
+	      <tr>
+	        <th class="text-r">开通时间：</th>
+	        <td>{{opendatetime}}</td>
+	      </tr>
+	      <tr>
+	        <th class="text-r">最后操作时间：</th>
+	        <td>{{modifytime}}</td>
+	      </tr>
+	    </tbody>
+	  </table>
+	</div>
+</article>
+
+<!--_footer 作为公共模版分离出去--> 
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script> 
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<script type="text/javascript" src="lib/layui/layui.all.js"></script>
+<script type="text/javascript" src="lib/vue.min.js"></script>
+<script type="text/javascript" src="lib/request.js"></script>
+<script type="text/javascript">
+    var vue = new Vue({
+        el: '#app',
+        data: {
+        	id:'',
+            name:'',
+            simplename:'',
+            opendatetime:'',
+            applydatetime:'',
+            province:'',
+            status:'',
+            linkman:'',
+            linkmobilephone:'',
+            linktelephone:'',
+            email:'',
+			city:'',
+            region:'',
+            address:'',
+            level:'',
+            modifytime:'',
+            logo:'',
+            vrNumber:'',
+            type:'',
+            businessLicense:'',
+            OpeningTime:'',
+            ExpireDate:'',
+            introduction:'',
+            hostingStatus:'',
+            hosting:''
+        },
+        filters: {
+            numFilter(value) {
+                // 截取当前数据到小数点后两位
+                let realVal = Number(value).toFixed(3)
+                // num.toFixed(2)获取的是字符串
+                return Number(realVal)
+            }
+        }
+    });
+    $(function(){
+        vue.id = UrlParam.paramValues("ID");
+        if(vue.id!=undefined){
+            GetAgentInfo();
+        }
+    });
+    
+    function GetAgentInfo() {
+        var param = "{\"ID\":"+vue.id+"}";
+           $.ajax({
+               type: "post",
+               url: selectAgent,
+               data: {parameter:param},
+               dataType: "json",
+               success: function(data){
+                   if(data.Success){
+                       vue.name=data.Data.name;
+                       vue.simplename=data.Data.simplename;
+                       vue.province=data.Data.province;
+                       vue.city=data.Data.city;
+                       vue.region=data.Data.region;
+                       vue.address=data.Data.address;
+                       vue.level=data.Data.level;
+                       vue.linkman=data.Data.linkman;
+                       vue.linkmobilephone=data.Data.linkmobilephone;
+                       vue.linktelephone=data.Data.linktelephone;
+                       vue.email=data.Data.email;
+                       vue.status=data.Data.status;
+                       vue.modifytime=data.Data.modifytime;
+                       vue.opendatetime=data.Data.opendatetime;
+                       vue.applydatetime=data.Data.applydatetime;
+                       vue.vrNumber=data.Data.vrNumber;
+                       vue.type=data.Data.type;
+                       vue.businessLicense = data.Data.businessLicense;
+                       vue.logo = data.Data.logo;
+                       vue.OpeningTime = data.Data.opening_time;
+                       vue.ExpireDate = data.Data.expire_date;
+                       vue.introduction = data.Data.introduction;
+                       vue.hostingStatus = data.Data.hostingStatus;
+                       vue.hosting = data.Data.hosting;
+				   }else{
+                       layer.msg(data.Message,{icon: 5,time:1000})
+				   }
+               },error:function(err){
+               }
+           });
+    }
+</script> 
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>

@@ -1,0 +1,638 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8"><style type="text/css">[v-cloak] {
+            display: none;
+        }</style>
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5shiv.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="lib/layer/2.4/skin/layer.css" />
+<link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.8/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
+<!--[if IE 6]>
+<script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<title>VR管理</title>
+    <style>
+        #workMenu .floatP p{
+            display: inline-block;
+        }
+        #workMenu .floatP p:first-child{
+            width: 55%;
+        }
+        #workMenu .floatP p:last-child{
+            width: 40%;
+        }
+        #workMenu .titleName{
+            display: inline-block;
+            width:150px;
+        }
+        #workMenu div{
+            margin: 10px;
+        }
+		.td-manage{
+			display: flex;
+			justify-content: space-around;
+		}
+		.td-manage a{
+			display:inline-block;
+			min-width:50px;
+		}
+    </style>
+</head>
+<body>
+<div id="app" v-cloak>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 运营管理 <span class="c-gray en">&gt;</span> 作品管理 <span class="c-gray en">&gt;</span> 作品列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container" >
+	<div class="text-c">
+	<!--日期范围：-->
+		<!--<input type="text" onfocus="WdatePicker({ maxDate:'#F{$dp.$D(\'datemax\')||\'%y-%M-%d\'}' })" id="datemin" class="input-text Wdate" style="width:120px;">-->
+		<!-- - -->
+		<!--<input type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d' })" id="datemax" class="input-text Wdate" style="width:120px;">-->
+		<!--<input type="text" class="input-text" style="width:250px" placeholder="输入会员名称、电话、邮箱" name="">-->
+		<!--<button type="submit" class="btn btn-success radius" id="" name=""><i class="Hui-iconfont">&#xe665;</i> 搜用户</button>-->
+	<!--</div>-->
+	<!--暂时注释  后期添加查询条件功能-->
+    <!--<div class="text-c">-->
+        <!--&lt;!&ndash;日期范围：&ndash;&gt;-->
+        <!--&lt;!&ndash;<input type="text" onfocus="WdatePicker({ maxDate:'#F{$dp.$D(\'datemax\')||\'%y-%M-%d\'}' })" id="datemin" class="input-text Wdate" style="width:120px;">&ndash;&gt;-->
+         <!--&lt;!&ndash; - &ndash;&gt;-->
+        <!--&lt;!&ndash;<input type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d' })" id="datemax" class="input-text Wdate" style="width:120px;">&ndash;&gt;-->
+        <!--代理编号：-->
+        <!--<input type="text" class="input-text" style="width:120px" placeholder="输入代理编号" name="aid" id="aid" v-model="aid">-->
+        <!--企业名称：-->
+        <!--<input type="text" class="input-text" style="width:160px" placeholder="输入企业名称" name="name" id="name" v-model="name">-->
+        <!--联系人：-->
+        <!--<input type="text" class="input-text" style="width:120px" placeholder="输入联系人" name="linkman" id="linkman" v-model="linkman">-->
+        <!--联系人手机号码：-->
+        <!--<input type="text" class="input-text" style="width:130px" placeholder="输入联系人手机号码" name="linkMobilePhone" id="linkMobilePhone" v-model="linkMobilePhone">-->
+        <!--联系人电话：-->
+        <!--<input type="text" class="input-text" style="width:130px" placeholder="输入联系人电话" name="linkTelePhone" id="linkTelePhone" v-model="linkTelePhone">-->
+        <!--省:-->
+        <!--<input type="text" class="input-text" style="width:120px" placeholder="输入省份" name="province" id="province" v-model="province">-->
+        <!--市：-->
+        <!--<input type="text" class="input-text" style="width:120px" placeholder="输入城市" name="city" id="city" v-model="city">-->
+        <!--区：-->
+        <!--<input type="text" class="input-text" style="width:120px" placeholder="输入区域" name="region" id="region" v-model="region">-->
+        <!--<button type="button" class="btn btn-success radius" id="" name="" onclick="selectInfo(1)"><i class="Hui-iconfont">&#xe665;</i> 查询</button>-->
+		<form>
+			<div style="float:left">
+				<input type="text" placeholder="请输入作品标题关键字" id="title" class="input-text" style="width: 150px;">
+				<input type="text" placeholder="请输入用户简称关键字" id="simplename" class="input-text" style="width: 150px;">
+				<span class="select-box" style="width:150px">
+					<select id="categoryname" name="categoryname" class="select">
+						<option selected="selected" value="">请选择作品分类</option>
+						<option v-for = "i in categoryList" :value="i.title">{{i.title}}</option>
+					</select>
+				</span>
+				<span class="select-box" style="width:150px">
+					<select id="status" name="status" class="select">
+						<option selected="selected" value="">请选择作品状态</option>
+						<option value="1">公开</option>
+						<option value="2">禁用</option>
+						<option value="3">删除</option>
+					</select>
+				</span>
+				<span class="select-box" style="width:150px">
+					<select id="recomstatus" name="recomstatus" class="select">
+						<option selected="selected" value="">请选择推荐状态</option>
+						<option value="1">已推荐</option>
+						<option value="0">未推荐</option>
+					</select>
+				</span>
+
+				<input type="button" placeholder="查询" value="查询" onclick="selectInfo(1)" class="btn btn-success radius">
+				<input type="reset" placeholder="清空" value="清空" class="btn btn-primary radius">
+			</div>
+			<span class="select-box" style="width:150px;float:right" >
+				<select name="order" id = "order" onchange="selectInfo(1)" class="select">
+					<option value="1">默认排序</option>
+					<option value="3">最高浏览</option>
+					<option value="4">最高点赞</option>
+					<option value="5">最新推荐</option>
+				</select>
+			</span>
+		</form>
+    </div>
+    <div class="cl pd-5 bg-1 bk-gray mt-20" style="margin-top:55px">
+		<span class="r">
+			总记录数：<strong>{{listInfo.RecordCount}}</strong> 条
+		</span>
+		<span class="r">
+			总页数：<strong>{{listInfo.PageCount}}</strong> 页，
+		</span>
+		<span class="r">
+			当前页：<strong>{{listInfo.PageIndex}}</strong> 页，
+		</span>
+	</div>
+	<div class="mt-20">
+
+		<!--white-space: nowrap; 文本强制不换行； text-overflow:ellipsis;<!-- 文本溢出显示省略号；overflow:hidden; <!--溢出的部分隐藏；-->
+	<table class="table table-border table-bordered table-hover table-bg table-sort" style="width:100%;white-space: nowrap;text-overflow: ellipsis;overflow: hidden"><!--table-sort-->
+		<thead>
+			<tr class="text-c">
+				<!--<th width="25"><input type="checkbox" name="" value=""></th>-->
+				<th >序号</th>
+				<th >作品标题</th>
+				<!--<th >所有者类型</th>-->
+				<!--<th >排序</th>-->
+				<th >用户简称</th>
+				<th >作品分类</th>
+				<th >浏览量</th>
+				<th >点赞</th>
+				<th >作品状态</th>
+				<th >推荐状态</th>
+				<th >推荐有效期</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr class="text-c" v-for="c in listInfo.List" id="mydel">
+				<td>{{c.id}}</td>
+				<td >{{c.title}}</td>
+				<td >{{c.authorName}}</td>
+				<td>{{c.category}}</td>
+				<td >{{c.viewTimes}}</td>
+				<td>{{c.praiseTimes}}</td>
+				
+				<td class="td-status" v-if="c.status==2"><span class="label label-warning radius">已下架</span></td>
+				<td class="td-status" v-if="c.status==3"><span class="label label-danger radius">删除</span></td>
+				<td class="td-status" v-if="c.status==1 && c.isOpen==1"><span class="label label-success radius">公开</span></td>
+				<td class="td-status" v-if="c.status==1 &&c.isOpen!=1"><span class="label label-danger radius">未公开</span></td>
+				
+				<td v-if="c.isRecom==1 && c.status==1">已推荐</td>
+				<td v-if="c.isRecom==0 && c.status==1">未推荐</td>
+				<td v-if="c.status!=1">-</td>
+				<td v-if="c.recomTime!=''&& c.status==1 && c.isRecom==1">{{c.recomTime}}</td>
+				<td v-if="c.recomTime==''|| c.status!=1 || c.isRecom==0">-</td>
+				<td class="td-manage" v-if="c.status==2">
+					<a style="text-decoration:none" @click="member_stop(this,c.id,c)" href="javascript:;" title="查看详情">
+						查看详情
+					</a>
+					<a  style="text-decoration:none">
+						-
+					</a>
+					<a  v-if="c.status==1" title="下架" href="javascript:;" @click="updaetStatus(this,c.id,c.status)"style="text-decoration:none">
+						下架
+					</a>
+					<a  v-if="c.status==2" title="上架" href="javascript:;" @click="updaetStatus(this,c.id,c.status)"  style="text-decoration:none">
+						上架
+					</a>
+				</td>
+				<td class="td-manage" v-if="c.status==3">
+					<a style="text-decoration:none" @click="member_stop(this,c.id,c)" href="javascript:;" title="查看详情">
+						查看详情
+					</a>
+					<a  style="text-decoration:none">
+						-
+					</a>
+					<a style="text-decoration:none">
+						-
+					</a>
+				</td>
+				<td class="td-manage"  v-if="c.status==1 && c.isOpen==1">
+					<a style="text-decoration:none" @click="member_stop(this,c.id,c)" href="javascript:;" title="查看详情">
+						查看详情
+					</a>
+					<a v-if="c.isRecom==0 && c.status==1" title="添加推荐" href="javascript:;" @click="setRecommend(this,c.id,c.t_recommend)" class="ml-5" style="text-decoration:none">
+						推荐
+					</a>
+					<a v-if="c.isRecom==1 && c.status==1" title="取消推荐" href="javascript:;" @click="removeRecommend(this,c.id,c.t_recommend)" class="ml-5" style="text-decoration:none">
+						取消推荐
+					</a>
+					<a  v-if="c.status==1" title="下架" href="javascript:;" @click="updaetStatus(this,c.id,c.status)" class="ml-5" style="text-decoration:none">
+						下架
+					</a>
+					<a  v-if="c.status==2" title="上架" href="javascript:;" @click="updaetStatus(this,c.id,c.status)" class="ml-5" style="text-decoration:none">
+						上架
+					</a>
+				</td>
+				<td class="td-manage" v-if="c.status==1 &&c.isOpen!=1">
+					<a style="text-decoration:none" @click="member_stop(this,c.id,c)" href="javascript:;" title="查看详情">
+						查看详情
+					</a>
+					<a v-if="c.isRecom==0 && c.status==1" title="添加推荐" href="javascript:;" @click="setRecommend(this,c.id,c.t_recommend)" class="ml-5" style="text-decoration:none">
+						-
+					</a>
+					<a  v-if="c.status==1" title="下架" href="javascript:;" @click="updaetStatus(this,c.id,c.status)" class="ml-5" style="text-decoration:none">
+						下架
+					</a>
+					<a  v-if="c.status==2" title="上架" href="javascript:;" @click="updaetStatus(this,c.id,c.status)" class="ml-5" style="text-decoration:none">
+						上架
+					</a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	</div>
+	<div class="pagination" style="float: right">
+		<a href="#" onclick="selectInfo('1')">首页</a>
+		<a href="#" @click="selectInfo(listInfo.PageIndex-1)">上一页</a><!--{{listInfo.PageIndex}}-->
+		<a href="#" @click="selectInfo(listInfo.PageIndex+1)">下一页</a><!--{{listInfo.PageIndex}}-->
+		<a href="#" @click="selectInfo(listInfo.PageCount)">尾页</a><!--{{listInfo.PageCount}}-->
+		<input type="number" name="tznum" id="tznum" min="1" step="1" max="" style="color: #0C0C0C;width: 80px"/>
+		<a href="#" @click="tiaozhuan()">跳转</a>
+	</div>
+</div>
+</div>
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script> 
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="lib/My97DatePicker/4.8/WdatePicker.js"></script> 
+<script type="text/javascript" src="lib/datatables/1.10.0/jquery.dataTables.min.js"></script> 
+<script type="text/javascript" src="lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="lib/layui/layui.all.js"></script>
+<script type="text/javascript" src="lib/vue.min.js"></script>
+<script type="text/javascript" src="lib/request.js"></script>
+<script type="text/javascript">
+    // 创建一个 Vue 实例或 "ViewModel"
+    // 它连接 View 与 Model
+    var vue = new Vue({
+        el: '#app',
+        data: {
+            message:'Hello World!!!',
+			listInfo:[],
+            aid:'',
+            name:'',
+            linkman:'',
+            linkMobilePhone:'',
+            linkTelePhone:'',
+            province:'',
+            city:'',
+            region:'',
+			categoryList:[],
+		}
+    });
+    $.ajax({
+        url:getCategory,
+        type:"post",
+        dataType:"json",
+        success:function (data) {
+            vue.categoryList = data.Data.ListInfo;
+        }
+    });
+    //信息分页列表
+    function EnterpriseQueryList(index,info) {
+        if(index<1){
+            index = 1;
+			layui.use(['laydate', 'laypage', 'layer', 'table', 'carousel', 'upload', 'element'], function() {
+				var layer = layui.layer;
+				//向世界问个好
+				layer.msg('已经是第一页');
+			});
+            return;
+		}
+        
+        var param = "{\"PageIndex\":"+index+",\"PageSize\":10,\"Query\":{"+info+"}}";
+        // console.log(param);
+        $.ajax({
+            type: "post",
+            url: productList,
+            data: {param:param},
+            dataType: "json",
+            success: function(data){
+                // console.log(JSON.stringify(data));
+                vue.listInfo = data;
+                // JSON.stringify()
+                var a = document.getElementById("tznum");
+                a.setAttribute("max",vue.listInfo.PageCount);
+				if(vue.listInfo.PageCount==0){
+					layui.use(['laydate', 'laypage', 'layer', 'table', 'carousel', 'upload', 'element'], function() {
+						var layer = layui.layer;
+						layer.msg('暂无数据');
+					});
+				}else if(index>vue.listInfo.PageCount){
+					layui.use(['laydate', 'laypage', 'layer', 'table', 'carousel', 'upload', 'element'], function() {
+						var layer = layui.layer;
+						layer.msg('已经是最后一页');
+					});
+					return;
+					// }
+				}
+            },error:function(err){
+                layer.msg('程序异常，错误代码'+JSON.stringify(err));
+                // alert(JSON.parse(err));
+			}
+        });
+    }
+
+    function selectInfo(page){
+        var info = "\"IsShowPanoRem\":\"1\"";
+		//isRem
+		if($("#title").val().trim()!=''){
+			info +=  ",\"Title\":\""+$("#title").val().trim()+"\"";
+		}
+        if($("#simplename").val().trim()!=''){
+            info +=  ",\"AuthorName\":\""+$("#simplename").val().trim()+"\"";
+        }
+        if($("#categoryname option:selected").val()!=''){
+            info += ",\"Category\":\""+$("#categoryname option:selected").val()+"\"";
+        }
+        if($("#recomstatus option:selected").val()!=''){
+            info += ",\"isRem\":"+$("#recomstatus option:selected").val();
+        }
+        if($("#status option:selected").val()!=''){
+            info += ",\"Status\":"+$("#status option:selected").val();
+        }
+        if($("#order option:selected").val()!=''){
+            info += ",\"OrderBy\":"+$("#order option:selected").val();
+        }
+        EnterpriseQueryList(page,info);
+	}
+function tiaozhuan(){
+	var s = $("#tznum").val();
+	if(!/^\d+$/.test(s)){
+        layui.use(['laydate', 'laypage', 'layer', 'table', 'carousel', 'upload', 'element'], function() {
+            var layer = layui.layer;
+            //向世界问个好
+            layer.msg('请输入正确的页数！');
+        });
+        return;
+	}
+    selectInfo(s);
+}
+
+var json = [];
+json.push(JSON.parse(getCookie("islogin")));
+
+$(function(){
+    selectInfo(1);
+    // $('.table-bg').dataTable().fnAddData(vue.listInfo,true);
+    /*$('.table-sort').dataTable({
+        "aaSorting": [[ 1, "desc" ]],//默认第几个排序
+        "paging": false, // 禁止分页
+	 	"bStateSave": true,//状态保存
+        "bFilter": false,//不显示搜索
+		"bLengthChange": false,//不显示每页显示条数选项
+        "ordering": false, // 禁止排序
+        "language": {
+            "info": ""// 表格左下角显示的文字
+        },
+        "aoColumnDefs": [
+            //   // {"bVisible": false, "aTargets": [ 3 ]}, //控制列的隐藏显示
+            {"orderable":false,"aTargets":[1,2,3,4,6,7,8,10,11,12,13,14,15,16,17]}// 制定列不参与排序
+        ]
+    }).fnAddData(vue.listInfo,true);*/
+    $(".odd").remove();
+});
+/*用户-添加*/
+function member_add(title,url,w,h){
+	layer_show(title,url,w,h);
+}
+/*用户-查看*/
+function member_show(title,url,id,w,h){
+	layer_show(title,url,w,h);
+}
+/*用户-停用*/
+function member_stop(obj,id,c){
+    layui.use('layer', function() {
+        var layer = layui.layer;
+        var statu = "";
+        if(c.status==1){
+            statu = "正常";
+		}
+        if(c.status==2){
+            statu = "禁言";
+        }
+        if(c.status==3){
+            statu = "删除";
+        }
+        var level = "";
+        // 1：普通代理2：Vip代理（购买过某个产品功能）3：钻石代理（包月）4：至尊代理（包年）
+		if(c.level==1){
+            level = "普通代理";
+		}
+        if(c.level==2){
+            level = "Vip代理";
+        }
+        if(c.level==3){
+            level = "钻石代理（包月）";
+        }
+        if(c.level==4){
+            level = "至尊代理（包年）";
+        }
+        layer.open({
+            type: 1,
+            shade: false,
+            title: "作品详情",
+            content:'<div id="workMenu">' +
+                      '<div class="floatP">' +
+                          '<p><span class="titleName">序号</span><span>'+c.id+'</span></p>' +
+                          '<p><span class="titleName">用户编号</span><span>'+c.authorId+'</span></p>' +
+                        '</div>' +
+                      '<div class="floatP">' +
+                          '<p><span class="titleName">作品标题</span><span>'+c.title+'</span></p>' +
+                          '<p><span class="titleName">用户简称</span><span>'+c.simpleName+'</span></p>' +
+                      '</div>' +
+                      '<div class="floatP">' +
+                          '<p><span class="titleName">作品分类</span><span>'+c.category+'</span></p>' +
+                          '<p><span class="titleName">会员级别</span><span>'+level+'</span></p>' +
+                      '</div>' +
+                      '<div class="floatP">' +
+                          '<p><span class="titleName">作品状态</span><span>'+statu+'</span></p>' +
+                          '<p><span class="titleName">浏览量</span><span>'+c.viewTimes+'</span></p>' +
+                      '</div>' +
+                      '<div class="floatP">' +
+                          '<p><span class="titleName">作品创建时间</span><span>'+c.createDateTime+'</span></p>' +
+                          '<p><span class="titleName">点赞量</span><span>'+c.praiseTimes+'</span></p>' +
+                      '</div>' +
+                      '<div class="floatP">' +
+                          // '<p><span class="titleName">作品有效期</span><span>3</span></p>' +
+                          '<p><span class="titleName">推荐状态</span><span>'+(c.isRecom==1?"已推荐":"未推荐")+'</span></p>' +
+                      '</div>' +
+                      '<div class="floatP">' +
+                          // '<p><span class="titleName">文件类型</span><span>3</span></p>' +
+                          '<p><span class="titleName">推荐有效期</span><span>'+c.recomTime+'</span></p>' +
+                      '</div>' +
+                      // '<div>' +
+                        // '<p><span class="titleName">文件大小</span><span>100M</span></p>' +
+                      // '</div>' +
+                      // '<div>' +
+                      //   '<p><span class="titleName">文件路径</span><span>全景图片后台文件路径</span></p>' +
+                      // '</div>' +
+                      '<div>' +
+                        '<p><span class="titleName">作品封面</span><img src="'+c.cover+'" alt=""></p>' +
+                      '</div>' +
+                      '<div>' +
+                        '<p><span class="titleName">作品简介</span><span>'+c.brief+'</span></p>' +
+                      '</div>' +
+                      '<div>' +
+                        '<p><span class="titleName">作品标签</span><span>'+c.tags+'</span></p>' +
+                      '</div>' +
+            '</div>',
+            btn:false,
+            area:["800px","600px"]
+        });
+    });
+}
+function  setRecommend(obj,id,t_recommend){
+    layui.use(['laydate','layer'], function() {
+        var laydate = layui.laydate;
+        var layer = layui.layer;
+        layer.open({
+            type: 1,
+            shade: false,
+            title: "推荐",
+            content:'<p style="margin: 20px;text-align: center">' +
+                    '<span style="margin-right: 20px">推荐有效期</span>' +
+                    '<input type="text" id="test1" style="outline: none;border: 1px solid #ccc;width: 200px">' +
+                    '</p>',
+            btn:["确定","取消"],
+            area:["300px","224px"],
+			btn1:function () {
+                var t = $("#test1").val();
+                if(t==''){
+                    layer.msg("请选择日期",{icon:2,time:1000})
+				}else{
+                    var param = "{\"Pid\":"+id+",\"Begintime\":\""+t.split(" - ")[0]+"\",\"Endtime\":\""+t.split(" - ")[1]+"\",\"Operator\":"+json[0].Data.id+",\"Reamek\":\"设置推荐\"}";
+                    $.ajax({
+                        type: 'POST',
+                        url: insertRecommend,
+                        data:{param:param},
+                        dataType: 'json',
+                        success: function(data){
+							// layer.msg('success!',{icon: 6,time:1000});
+                            selectInfo(vue.listInfo.PageIndex);
+                        }
+                    });
+                    layer.closeAll();
+				}
+        	}
+        });
+        laydate.render({
+            elem: '#test1',range: true,min:0
+        });
+    });
+}
+function removeRecommend(obj,id,t_recommend){
+    var param = "{\"Pid\":\""+id+"\",\"Status\":2,\"Operator\":\""+json[0].Data.id+"\",\"Reamek\":\"取消推荐\"}";
+    layer.open({
+        type: 1,
+        shade: false,
+        title: "取消推荐",
+        content:'<p style="margin: 20px;text-align: center">该作品将不在首页推荐栏显示，确定取消？</p>',
+        btn:["确定","取消"],
+        area:["324px","200px"],
+        btn1:function () {
+            $.ajax({
+                type: 'POST',
+                url: updateReconmend,
+                data:{param:param},
+                dataType: 'json',
+                success: function(data){
+                    selectInfo(vue.listInfo.PageIndex);
+                }
+            });
+            layer.closeAll();
+        }
+    })
+
+
+}
+    function  updaetStatus(obj,id,statu){
+
+        // layer.open({
+        //     type: 1,
+        //     shade: false,
+        //     title: "下架",
+        //     content:'<p style="margin: 20px;text-align: center">该作品涉嫌违规，确定下架？</p>',
+        //     btn:["确定","取消"],
+        //     area:["324px","200px"]
+        // });
+
+		var json = [];
+		json.push(JSON.parse(getCookie("islogin")))
+        if(statu==1){
+            var param = "{\"ID\":"+id+",\"Status\":2,\"Op\":"+json[0].Data.id+"}";
+            layer.confirm('该作品涉嫌违规,确认要下架吗？',function(index){
+                $.ajax({
+                    type: 'POST',
+                    url: productUpdate,
+                    data:{param:param},
+                    dataType: 'json',
+                    success: function(data){
+                        if(data.Success){
+                            // layer.msg('已取消!',{icon: 6,time:1000});
+                        }else{
+                            // layer.msg('失败!',{icon: 5,time:1000});
+                        }
+                        selectInfo(vue.listInfo.PageIndex);
+						layer.closeAll();
+                    },
+                    error:function(data) {
+                        // console.log(data.msg);
+						layer.closeAll();
+                    },
+                });
+            });
+        }else{
+            var param = "{\"ID\":"+id+",\"Status\":1,\"Op\":\""+json[0].Data.id+"\"}";
+            layer.confirm('确认上架吗？',function(index){
+                $.ajax({
+                    type: 'POST',
+                    url: productUpdate,
+                    data:{param:param},
+                    dataType: 'json',
+                    success: function(data){
+                        if(data.Success){
+                            // layer.msg('已添加!',{icon: 6,time:1000});
+                        }else{
+                            // layer.msg('失败!',{icon: 5,time:1000});
+                        }
+                        selectInfo(vue.listInfo.PageIndex);
+						layer.closeAll();
+                    },
+                    error:function(data) {
+                        // console.log(data.msg);
+						layer.closeAll();
+                    },
+                });
+            });
+        }
+    }
+/*用户-编辑*/
+function member_edit(title,url,id,w,h,param){
+    if(param!=''){
+        url = url+"?param="+param;
+	}
+	layer_show(title,url,w,h);
+}
+/*密码-修改*/
+function change_password(title,url,id,w,h,param1,param2){
+	url = url+"?name="+param1+"&bb="+param2;
+	layer_show(title,url,w,h);
+}
+/*用户-删除*/
+function member_del(obj,id){
+	layer.confirm('确认要删除吗？',function(index){
+		$.ajax({
+			type: 'POST',
+			url: '',
+			dataType: 'json',
+			success: function(data){
+				$(obj).parents("tr").remove();
+				layer.msg('已删除!',{icon:1,time:1000});
+			},
+			error:function(data) {
+				// console.log(data.msg);
+			},
+		});		
+	});
+}
+</script> 
+</body>
+</html>

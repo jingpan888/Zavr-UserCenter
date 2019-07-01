@@ -1,0 +1,368 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style type="text/css">[v-cloak] {
+        display: none;
+    }</style>
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5shiv.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="./lib/layer/2.4/skin/layer.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.8/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/layer/2.4/skin/layer.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <!--[if IE 6]>
+    <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <title>权限设置</title>
+</head>
+<body onload="employeeApp">
+<div id="app" v-cloak>
+    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 权限管理 <span
+            class="c-gray en">&gt;</span> 权限设置 <a class="btn btn-success radius r"
+                                                  style="line-height:1.6em;margin-top:3px"
+                                                  href="javascript:location.replace(location.href);" title="刷新"><i
+            class="Hui-iconfont">&#xe68f;</i></a></nav>
+    <div class="page-container">
+        <div class="text-c">
+            <div style="float: left">
+                <!--  员工姓名：<input type="text" class="input-text" style="width:200px;height:30px;" placeholder="请输入员工姓名...."
+                              id="name" name="name" v-model="name">
+                  员工手机号：<input type="text" class="input-text" style="width:200px;height:30px;" placeholder="请输入员工手机号...."
+                               id="employeePhone" name="employeePhone" v-model="employeePhone">-->
+                <form>
+                    <div>
+                        <select id="depart" class="select" name="department" style="width:200px; height:30px;"
+                                onclick="checkPosition(this)" placeholder="按部门筛选">
+                            <option selected>按部门筛选</option>
+                            <option v-for="i in departmentList" :value="i.id">{{i.departmentName}}</option>
+                        </select>
+                        <select id="position" class="select" name="position" style="width:200px; height:30px;">
+                            <option>按职位筛选</option>
+                            <option v-for="i in positionList" :value="i.id">{{i.positionName}}</option>
+                        </select>
+                        <!--<input class="input-text" name="namePhone" id="namePhone" type="text" placeholder="请输入姓名或者手机号"
+                               style="width:200px;height:30px;"/>-->
+                        <button type="button" class="btn btn-success radius" id="" name="" onclick="selectInfo('1')"><i
+                                class="Hui-iconfont"></i>
+                            查询
+                        </button>
+                        <button type="reset" class="btn btn-primary radius" onclick="refresh()"><i class="Hui-iconfont">清空</i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div style="padding-top: 20px">
+            <div class="cl pd-5 bg-1 bk-gray mt-20">
+		<span class="l">
+			<a href="javascript:;" onclick="department_add('新增部门','authority-department-add.html','450','200')"
+               class="btn btn-primary radius" style="margin-right: 40px"><i
+                    class="Hui-iconfont">&#xe600;</i> 新增部门</a></span>
+                <span class="1">
+                <a href="javascript:;" onclick="position_add('新增职位','authority-position-add.html','450','450')"
+                   class="btn btn-primary radius" style="margin-right: 40px"><i
+                        class="Hui-iconfont">&#xe600;</i> 新增职位</a></span>
+                <span class="1">
+                <a href="javascript:;"
+                   onclick="authority_department_position_update('名称修改','authority-department-position-update.html','450','400')"
+                   class="btn btn-primary radius" style="margin-right: 40px"><i
+                        class="Hui-iconfont">&#xe6df;</i> 名称修改</a></span>
+                <span class="r">
+			总记录数：<strong>{{listInfo.RecordCount}}</strong> 条
+		</span>
+                <span class="r">
+			总页数：<strong>{{listInfo.PageCount}}</strong> 页，
+		</span>
+                <span class="r">
+			当前页：<strong>{{listInfo.PageIndex}}</strong> 页，
+		</span>
+            </div>
+        </div>
+        <div class="mt-20">
+            <!--white-space: nowrap; 文本强制不换行； text-overflow:ellipsis;<!-- 文本溢出显示省略号；overflow:hidden; <!--溢出的部分隐藏；-->
+            <table class="table table-border table-bordered table-hover table-bg table-sort"
+                   style="width:100%;white-space: nowrap;text-overflow: ellipsis;overflow: hidden"><!--table-sort-->
+                <thead>
+                <tr class="text-c">
+                    <th>编号</th>
+                    <th>部门</th>
+                    <th>职务</th>
+                    <th>人数</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="text-c" v-for="entity in listInfo.List" id="mydel">
+                    <td>{{entity.id}}</td>
+                    <td>{{entity.departmentName}}</td>
+                    <td>{{entity.positionName}}</td>
+                    <td>{{entity.positionCount}}</td>
+                    <td class="td-manage">
+                        <a @click="authority_details('查看权限详情','authority-details.html',entity.id)" href="javascript:;"
+                           title="详情" style="text-decoration:none"><i class="Hui-iconfont">&#xe720;</i>&nbsp;&nbsp;</a>
+                        <a title="编辑" href="javascript:;"
+                           onclick="employee_edit('权限修改','authority-update.html',this)" :data-id="entity.id"
+                           class="ml-5" style="text-decoration:none"><i
+                                class="Hui-iconfont">&#xe6df;</i>&nbsp;&nbsp;</a>
+
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="pagination" style="float: right">
+            <a href="#" onclick="selectInfo('1')">首页</a>
+            <a href="#" @click="selectInfo(listInfo.PageIndex-1)">上一页</a><!--{{listInfo.PageIndex}}-->
+            <a href="#" @click="selectInfo(listInfo.PageIndex+1)">下一页</a><!--{{listInfo.PageIndex}}-->
+            <a href="#" @click="selectInfo(listInfo.PageCount)">尾页</a><!--{{listInfo.PageCount}}-->
+            <input type="number" name="tznum" id="tznum" min="1" step="1" max="" style="color: #0C0C0C;width: 80px"/>
+            <a href="#" onclick="tiaozhuan()">跳转</a>
+        </div>
+    </div>
+</div>
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="lib/layui/layui.all.js"></script>
+<script type="text/javascript" src="lib/vue.min.js"></script>
+<script type="text/javascript" src="lib/request.js"></script>
+<script type="text/javascript">
+    // 创建一个 Vue 实例或 "ViewModel"
+    // 它连接 View 与 Model
+    var vue = new Vue({
+        el: '#app',
+        data: {
+            message: 'Hello World!!!',
+            listInfo: [],
+            name: '',
+            employeePhone: '',
+            gender: '',
+            type: '',
+            departmentList: [],
+            positionList: [],
+            PageNum: ''
+        }
+    });
+    //查询部门,职位信息
+    window.onload = function () {
+        $.ajax({
+            type: "post",
+            url: SearchPlatDepartment,
+            dataType: "json",
+            success: function (data) {
+                // console.log(JSON.stringify(data));
+                vue.departmentList = data;
+            }
+        });
+    }
+
+    function checkPosition(obj) {
+        if ($(obj).val() == "按部门筛选") {
+            vue.positionList = [];
+            return;
+        }
+        var pid = "{\"PID\":" + $(obj).val() + "}";
+        $.ajax({
+            type: "post",
+            url: SearchPlatPosition,
+            data: {param: pid},
+            dataType: "json",
+            success: function (data) {
+                // console.log(JSON.stringify(data));
+                vue.positionList = data;
+                $("#position").val("按职位筛选");
+            }
+        });
+    }
+
+    //重置
+    function refresh() {
+        $("#position").val() == '';
+        $("#department").val() == '';
+        PlatUserPositionList(1, '');
+
+
+    }
+
+    /*用户-详情*/
+    function authority_details(title, url, id) {
+        if (id != '') {
+            url = url + "?ID=" + id;
+            layui.use('element', function () {
+                var element = layui.element;
+            });
+            layer.open({
+                type: 2,
+                title: title,
+                area: ['480px', '400px'],
+                fixed: true,
+                maxmin: false,
+                content: url
+            })
+        }
+    }
+
+
+    function tiaozhuan() {
+        var s = $("#tznum").val();
+        if (!/^\d+$/.test(s)) {
+            layui.use(['laydate', 'laypage', 'layer', 'table', 'carousel', 'upload', 'element'], function () {
+                var layer = layui.layer;
+                //向世界问个好
+                layer.msg('请输入正确的页数！');
+            });
+            return;
+        }
+        selectInfo(s);
+    }
+
+    function selectInfo(index) {
+
+        var info = "";
+        var departID = $("#depart").val(); //获取选中的值
+        if (departID != '' && departID != "按部门筛选") {
+            info += "\"departmentID\":\"" + departID + "\",";
+        }
+        var positionID = $("#position").val(); //获取选中的值
+        if (positionID != '' && positionID != "按职位筛选") {
+            info += "\"positionID\":\"" + positionID + "\",";
+        }
+        info += "\"A\":1"
+        PlatUserPositionList(index, info);
+    }
+
+    //部门，职务信息分页列表
+    function PlatUserPositionList(index, info) {
+        if (index < 1) {
+            index = 1;
+            layui.use(['laydate', 'laypage', 'layer', 'table', 'carousel', 'upload', 'element'], function () {
+                var layer = layui.layer;
+                layer.msg('已经是第一页');
+            });
+            return;
+        }
+        var param = "{\"PageIndex\":" + index + ",\"PageSize\":10,\"Query\":{" + info + "}}";
+        $.ajax({
+            type: "post",
+            url: QueryPositionUsers,
+            data: {param: param},
+            dataType: "json",
+            success: function (data) {
+                vue.listInfo = data;
+                var a = document.getElementById("tznum");
+                a.setAttribute("max",vue.listInfo.PageCount);
+                if (vue.listInfo.PageCount == 0) {
+                    layui.use(['laydate', 'laypage', 'layer', 'table', 'carousel', 'upload', 'element'], function () {
+                        var layer = layui.layer;
+                        layer.msg('暂无数据');
+                    });
+                    return;
+                } else if (index > vue.listInfo.PageCount) {
+                    layui.use(['laydate', 'laypage', 'layer', 'table', 'carousel', 'upload', 'element'], function () {
+                        var layer = layui.layer;
+                        layer.msg('已经是最后一页');
+                    });
+                }
+            }, error: function (err) {
+                layer.msg('程序异常，错误代码' + JSON.stringify(err));
+            }
+        });
+    }
+
+    $(function () {
+        $('.table-bg').dataTable({
+            "aaSorting": [[1, "desc"]],//默认第几个排序
+            "paging": false, // 禁止分页
+            "bStateSave": true,//状态保存
+            "bFilter": false,//不显示搜索
+            "bLengthChange": false,//不显示每页显示条数选项
+            "ordering": false, // 禁止排序
+            "language": {
+                "info": ""// 表格左下角显示的文字
+            }
+        }).fnAddData(vue.listInfo, true);
+        $(".odd").remove();
+    });
+    $(function () {
+        PlatUserPositionList(1, '');
+
+    })
+
+    /*用户-添加部门*/
+    function department_add(title, url, w, h) {
+        layer_show(title, url, w, h);
+    }
+
+    /*部门，职务修改*/
+    function authority_department_position_update(title, url, w, h) {
+        layer_show(title, url, w, h);
+    }
+
+    /*  添加职位 */
+    function position_add(title, url, w, h) {
+        layer_show(title, url, w, h);
+    }
+
+    /*用户-查看*/
+    function employee_show(title, url, id, w, h) {
+        layer_show(title, url, w, h);
+    }
+
+    /*用户-编辑*/
+    function employee_edit(title, url, obj) {
+        var w = 500;
+        var h = 425;
+        var param = $(obj).attr('data-id');
+        url = url + "?param=" + param;
+        layer_show(title, url, w, h);
+    }
+
+    /*密码-修改*/
+    function change_password(obj) {
+        var msg = "";
+        //获取状态
+        //获取用户ID
+        var id = $(obj).attr("data-id");
+        var userStatus = $(obj).attr("data-status");
+        var userAuthid = $(obj).attr("data-userid");
+        msg = "你确定重置密码吗？";
+        var param = "{\"ID\":" + id + ",\"UserStatus\":" + userStatus + ",\"UserAuthID\":" + userAuthid + ",\"Op\":\"\"}";
+        //alert(param);
+        layer.confirm(msg, function (index) {
+            $.ajax({
+                type: 'POST',
+                data: {param: param},
+                url: ResetPlatUserProfileUserPassword,
+                dataType: 'json',
+                success: function (data) {
+                    if (data.success) {
+                        PlatUserPositionList("1");
+                        layer.msg('已启用!', {icon: 5, time: 1000});
+                    }
+                }, error: function (err) {
+                    console.log(err.msg);
+                },
+            });
+            layer.closeAll('dialog');
+        });
+    }
+</script>
+</body>
+</html>

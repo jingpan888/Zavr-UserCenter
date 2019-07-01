@@ -1,0 +1,176 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8"><style type="text/css">[v-cloak] {
+            display: none;
+        }</style>
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5shiv.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.8/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin" />
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
+    <!--[if IE 6]>
+    <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <style>
+        .col-sm-3{
+            width: 18%;
+        }
+    </style>
+    <![endif]-->
+    <title>代理员工详情</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+</head>
+<body>
+<article class="page-container" id="app" v-cloak>
+    <div class="pd-20">
+        <table class="table table-border table-bordered table-hover table-bg table-sort table-striped" style="width:100%;white-space: nowrap;text-overflow: ellipsis;overflow: hidden">
+            <tbody>
+            <tr>
+                <th class="text-r">员工编号：</th>
+                <td>{{id}}</td>
+            </tr>
+            <tr>
+                <th class="text-r">所属代理：</th>
+                <td>{{AgentName}}</td>
+            </tr>
+            <tr>
+                <th class="text-r">员工账号：</th>
+                <td>{{identifier}}</td>
+            </tr>
+            <tr>
+                <th class="text-r">员工姓名：</th>
+                <td>{{name}}</td>
+            </tr>
+            <tr>
+                <th class="text-r">员工性别：</th>
+                <td v-if="gender==0"></td>
+                <td v-if="gender==1">男</td>
+                <td v-if="gender==2">女</td>
+                <td v-if="gender==3">保密</td>
+            </tr>
+            <tr>
+                <th class="text-r">员工类别：</th>
+                <td v-if="type==0"></td>
+                <td v-if="type==1">管理员</td>
+                <td v-if="type==2">经理</td>
+                <td v-if="type==3">客服</td>
+                <td v-if="type==4">普通员工</td>
+            </tr>
+            <tr>
+                <th class="text-r">所属部门：</th>
+                <td v-if="department==0"></td>
+                <td v-if="department==1">管理员</td>
+                <td v-if="department==2">研发部</td>
+                <td v-if="department==3">产品部</td>
+                <td v-if="department==4">市场部</td>
+                <td v-if="department==5">创意部</td>
+            </tr>
+            <tr>
+                <th class="text-r">员工电话：</th>
+                <td>{{iphone}}</td>
+            </tr>
+            <tr>
+                <th class="text-r">邮箱：</th>
+                <td>{{email}}</td>
+            </tr>
+            <tr>
+                <th class="text-r">状态：</th>
+                <td v-if="status==0"></td>
+                <td v-if="status==1"><span class="label label-default radius">启用</span></td>
+                <td v-if="status==2"><span class="label label-success radius">禁用</span></td>
+                <td v-if="status==3"><span class="label label-danger radius">删除</span></td>
+            </tr>
+            <tr>
+                <th class="text-r">注册时间：</th>
+                <td>{{creatdatetime}}</td>
+            </tr>
+            <tr>
+                <th class="text-r">最后操作时间：</th>
+                <td>{{modifytime}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</article>
+
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<script type="text/javascript" src="lib/layui/layui.all.js"></script>
+<script type="text/javascript" src="lib/vue.min.js"></script>
+<script type="text/javascript" src="lib/request.js"></script>
+<script type="text/javascript">
+    var vue = new Vue({
+        el: '#app',
+        data: {
+            id:'',
+            name:'',
+            identifier:'',
+            gender:'',
+            type:'',
+            department:'',
+            iphone:'',
+            email:'',
+            status:'',
+            creatdatetime:'',
+            modifytime:'',
+            AgentName:''
+        }
+    });
+    $(function(){
+        vue.id = UrlParam.paramValues("ID");
+        if(vue.id!=undefined){
+            GetAgentInfo();
+        }
+    });
+
+    function GetAgentInfo() {
+        var param = "{\"UID\":"+vue.id+"}";
+        // console.log(param);
+        $.ajax({
+            type: "post",
+            url: GetAgentUser,
+            data: {parameter:param},
+            dataType: "json",
+            success: function(data){
+                console.log(JSON.stringify(data));
+                vue.name=data.Data.name;
+                vue.id=data.Data.id;
+                vue.identifier=data.Data.userAuth.identifier;
+                vue.gender=data.Data.gender;
+                vue.type=data.Data.type;
+                vue.department=data.Data.department;
+                vue.iphone=data.Data.iphone;
+                vue.email=data.Data.email;
+                vue.status=data.Data.status;
+                vue.creatdatetime=data.Data.creatdatetime;
+                vue.modifytime=data.Data.modifytime;
+                vue.AgentName=data.Data.agent.name;
+            },error:function(err){
+                layer.msg('程序异常，错误代码'+JSON.stringify(err));
+                // alert(JSON.parse(err));
+            }
+        });
+    }
+</script>
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>

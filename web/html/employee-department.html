@@ -1,0 +1,245 @@
+<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8"><style type="text/css">[v-cloak] {
+            display: none;
+        }</style>
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <link rel="Bookmark" href="/favicon.ico">
+    <link rel="Shortcut Icon" href="/favicon.ico"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5shiv.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.8/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/layer/2.4/skin/layer.css"/>
+    <!--[if IE 6]>
+    <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <!--/meta 作为公共模版分离出去-->
+
+    <title>新增部门</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+</head>
+<body>
+<article class="page-container" id="app" v-cloak>
+    <form action="" method="post" class="form form-horizontal" id="form-member-add">
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-3">新增部门：</label>
+            <div class="formControls col-xs-8 col-sm-9" style="width: 250px">
+                <input type="text" class="input-text" value="" placeholder="请输入部门名称" id="department" name="department"
+                       v-model="departmentName">
+            </div>
+            </div>
+            <div class="row cl">
+                <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+                    <button class="btn btn-primary radius"   value="提交"
+                           onclick="">提交</button>
+                </div>
+                <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+                    <botton class="btn btn-primary radius" value="取消"
+                           onclick="window.close()">取消</botton>
+                </div>
+            </div>
+    </form>
+</article>
+
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<script type="text/javascript" src="lib/layui/layui.all.js"></script>
+<script type="text/javascript" src="lib/vue.min.js"></script>
+<script type="text/javascript" src="lib/request.js"></script>
+<script type="text/javascript">
+    var vue = new Vue({
+        el: '#app',
+        data: {
+        }
+    });
+    $(function () {
+        vue.info = UrlParam.paramValues("param");
+        if (vue.info != undefined) {
+            GetPlatUserProfileInfo();
+        }
+        $('.skin-minimal input').iCheck({
+            checkboxClass: 'icheckbox-blue',
+            radioClass: 'iradio-blue',
+            increaseArea: '20%'
+        });
+        $("#form-member-add").validate({
+            rules: {
+                username: {
+                    required: true,
+                    minlength: 2,
+                    maxlength: 16
+                },
+                sex: {
+                    required: true,
+                },
+                mobile: {
+                    required: true,
+                    isMobile: true,
+                },
+                email: {
+                    required: true,
+                    email: true,
+                },
+                uploadfile: {
+                    required: true,
+                },
+            },
+            onkeyup: false,
+            focusCleanup: true,
+            success: "valid",
+            submitHandler: function (form) {
+                valiType();
+                // var index = parent.layer.getFrameIndex(window.name);
+                // window.parent.location.reload();//刷新父页面
+                // parent.layer.close(index);//关闭页面
+            }
+        });
+    });
+
+    function GetPlatUserProfileInfo() {
+        var param = "{\"ID\":" + vue.info + "}";
+        $.ajax({
+            type: "post",
+            url:    GetPlatUserProfileByKey,
+            data: {param: param},
+            dataType: "json",
+            success: function (data) {
+                /* console.log(JSON.stringify(data));*/
+                vue.date = data.Data;
+                vue.id = data.Data.id;
+                vue.name = data.Data.name;//员工姓名
+                vue.employeePhone = data.Data.employeePhone;//员工手机号
+                vue.gender = data.Data.gender;//员工性别
+                vue.status = data.Data.status;//状态
+                vue.type = data.Data.type;//员工状态
+                $(":radio[name='gender'][value='" + vue.gender + "']").prop("checked", "checked");
+                $(":radio[name='status'][value='" + vue.status + "']").prop("checked", "checked");
+                $(":radio[name='type'][value='" + vue.type + "']").prop("checked", "checked");
+            }, error: function (err) {
+                layer.msg('程序异常，错误代码' + JSON.stringify(err));
+            }
+        });
+    };
+
+    // 新增员工
+    function addplatUserProfilesInfo() {
+        if (vue.name == '' || vue.name == null || vue.name == undefined) {
+            layer.msg('信息不完整');
+            return;
+        }
+        if (vue.employeePhone == '' || vue.employeePhone == null || vue.employeePhone == undefined) {
+            layer.msg('信息不完整');
+            return;
+        }
+        vue.gender = $("input[name='gender']:checked").val();
+        if (vue.gender == '' || vue.gender == null || vue.gender == undefined) {
+            layer.msg('信息不完整');
+            return;
+        }
+        vue.status = $("input[name='status']:checked").val();
+        if (vue.status == '' || vue.status == null || vue.status == undefined) {
+            layer.msg('信息不完整');
+            return;
+        }
+        vue.type = $("input[name='type']:checked").val();
+        if (vue.type == '' || vue.type == null || vue.type == undefined) {
+            layer.msg('信息不完整');
+            return;
+        }
+        var param = "{\"Name\":\"" + vue.name + "\",\"EmployeePhone\":\"" + vue.employeePhone + "\",\"Gender\":\"" + vue.gender + "\",\"Status\":\"" + vue.status + "\",\"Type\":\"" + vue.type + "\"}";
+        $.ajax({
+            type: "post",
+            url: CreatePlatUserProfile,
+            data: {param: param},
+            dataType: "json",
+            success: function (data) {
+                var index = parent.layer.getFrameIndex(window.name);
+                window.parent.location.reload();//刷新父页面
+                parent.layer.close(index);//关闭页面
+                layui.use(['laydate', 'laypage', 'layer', 'table', 'carousel', 'upload', 'element'], function () {
+                    var layer = layui.layer;
+                    layer.msg('Success');
+                });
+            }, error: function (err) {
+                layer.msg('程序异常，错误代码' + JSON.stringify(err));
+            }
+        });
+    }
+
+    // 修改员工
+    function updateplatUserProfilesInfo() {
+        if (vue.id == '' || vue.id == null || vue.id == undefined) {
+            layer.msg('信息不完整');
+            return;
+        }
+        if (vue.name == '' || vue.name == null || vue.name == undefined) {
+            layer.msg('信息不完整');
+            return;
+        }
+        vue.employeePhone = $("input[name='employeePhone']").val();
+        if (vue.employeePhone == '' || vue.employeePhone == null || vue.employeePhone == undefined) {
+            layer.msg('信息不完整');
+        }
+            vue.gender = $("input[name='gender']:checked").val();
+            if (vue.gender == '' || vue.gender == null || vue.gender == undefined) {
+                layer.msg('信息不完整');
+                return;
+            }
+            vue.status = $("input[name='status']:checked").val();
+            if (vue.status == '' || vue.status == null || vue.status == undefined) {
+                layer.msg('信息不完整');
+                return;
+            }
+            vue.type = $("input[name='type']:checked").val();
+            if (vue.type == '' || vue.type == null || vue.type == undefined) {
+                layer.msg('信息不完整');
+                return;
+            }
+            var param = "{\"ID\":" + vue.id + ",\"Name\":\"" + vue.name + "\",\"EmployeePhone\":\"" + vue.employeePhone + "\",\"Gender\":\"" + vue.gender + "\",\"Status\":\"" + vue.status + "\",\"Type\":\"" + vue.type + "\",\"Op\":\"\"}";
+            $.ajax({
+                type: "post",
+                url: SetPlatUserProfile,
+                data: {param: param},
+                dataType: "json",
+                success: function (data) {
+                    /*alert(JSON.stringify(data));*/
+                    var index = parent.layer.getFrameIndex(window.name);
+                    window.parent.location.reload();//刷新父页面
+                    parent.layer.close(index);//关闭页面
+                    layui.use(['laydate', 'laypage', 'layer', 'table', 'carousel', 'upload', 'element'], function () {
+                        var layer = layui.layer;
+                        layer.msg('修改成功！');
+                    });
+                }, error: function (err) {
+                    /*alert(JSON.stringify(err));*/
+                    layer.msg('程序异常，错误代码' + JSON.stringify(err));
+                }
+            });
+    }
+</script>
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>
